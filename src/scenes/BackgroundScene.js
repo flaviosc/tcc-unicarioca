@@ -1,11 +1,10 @@
 import Phaser from 'phaser';
-import SceneKeys from '../consts/SceneKeys';
 
 export default class BackgroundScene extends Phaser.Scene
 {
 	constructor()
 	{
-		super(SceneKeys.Background);
+		super("background-scene");
 	}
 
 	preload()
@@ -15,6 +14,6 @@ export default class BackgroundScene extends Phaser.Scene
     
     create()
     {
-        const background = this.add.image(100, 300, 'background').setOrigin(0, 0);
+        const background = this.add.image(300, 300, 'background').setOrigin(0, 0);
     }
 }

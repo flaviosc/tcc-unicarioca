@@ -1,11 +1,10 @@
-import Phaser from 'phaser'
-import SceneKeys from '../consts/SceneKeys'
+import Phaser from 'phaser';
 
 export default class GameScene extends Phaser.Scene
 {
 	constructor()
 	{
-		super(SceneKeys.Game)
+		super("game-scene")
 	}
 
 	preload()
@@ -18,6 +17,6 @@ export default class GameScene extends Phaser.Scene
         const width = this.scale.width;
         const height = this.scale.height;
 
-        this.scene.get(SceneKeys.Background);
+        this.scene.get("background-scene");
     }
 }
