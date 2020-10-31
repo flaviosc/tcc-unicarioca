@@ -2,6 +2,9 @@ import Phaser from 'phaser';
 
 export default class GameScene extends Phaser.Scene
 {
+    /** @type {Phaser.Scene} */
+    backgroundScene;
+    
 	constructor()
 	{
 		super("game-scene")
@@ -9,7 +12,7 @@ export default class GameScene extends Phaser.Scene
 
 	preload()
     {
-         
+
     }
     
     create()
@@ -17,7 +20,10 @@ export default class GameScene extends Phaser.Scene
         const width = this.scale.width;
         const height = this.scale.height;
 
-        let teste = this.scene.get("background-scene");
-        console.log(teste.scale);
+        this.backgroundScene = this.scene.get('background-scene');
+    }
+
+    update() {
+
     }
 }
