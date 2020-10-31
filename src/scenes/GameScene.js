@@ -17,6 +17,7 @@ export default class GameScene extends Phaser.Scene
         const width = this.scale.width;
         const height = this.scale.height;
 
-        this.scene.get("background-scene");
+        let teste = this.scene.get("background-scene");
+        console.log(teste.scale);
     }
 }
