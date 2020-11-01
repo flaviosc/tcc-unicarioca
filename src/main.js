@@ -1,6 +1,6 @@
 import Phaser, { Game } from 'phaser'
-import BackgroundScene from './scenes/BackgroundScene'
 import GameScene from './scenes/GameScene'
+import InitialScene from './scenes/InitialScene'
 
 
 const config = {
@@ -14,10 +14,10 @@ const config = {
 	physics: {
 		default: 'arcade',
 		arcade: {
-			gravity: { y: 200 }
+			gravity: { y: 300 }
 		}
 	},
-	scene: [BackgroundScene, GameScene]
+	scene: [GameScene, InitialScene]
 }
 
 export default new Phaser.Game(config)
