@@ -9,8 +9,11 @@ const PLANTS = 'plants';
 const PLATFORM_LEFT = 'platformleft';
 const PLATFORM_MIDDLE = 'platformmiddle';
 const PLATFORM_RIGHT = 'platformright';
+const SIGN = 'sign_right';
+const CRATE = 'crate';
 
 const GIRL_PLAYER = 'girlplayer';
+
 /**
  * 
  * @param {Phaser.Scene} scene 
@@ -57,6 +60,8 @@ export default class GameScene extends Phaser.Scene
         this.load.image(PLATFORM_LEFT, 'assets/platform_left.png'); 
         this.load.image(PLATFORM_MIDDLE, 'assets/platform_middle.png');
         this.load.image(PLATFORM_RIGHT, 'assets/platform_right.png');
+        this.load.image(SIGN, 'assets/sign.png');
+        this.load.image(CRATE, 'assets/crate.png');
 
         this.load.spritesheet('girlplayer', 'assets/female_tilesheet.png', { frameWidth: 80, frameHeight: 100 });
 
@@ -76,11 +81,17 @@ export default class GameScene extends Phaser.Scene
         repeatBackgroundAssets(this, totalWidth, PLATEAU, 0.50);
         repeatBackgroundAssets(this, totalWidth, GROUND, 1);
         repeatBackgroundAssets(this, totalWidth, PLANTS, 1.25);
+
+        this.add.image(25, height * 0.8, SIGN)
+                .setOrigin(0, 1);
         
         this.platforms = this.createPlatforms();
         this.player = this.createPlayer();
-        
+        this.challenges = this.createBoxChallenges();
         this.physics.add.collider(this.player, this.platforms);
+        this.physics.add.collider(this.challenges, this.platforms);
+        this.physics.add.overlap(this.player, this.challenges, this.collectStar, null, this);
+
         this.cameras.main.setBounds(0, 0, width * 10, height);
         this.physics.world.setBounds(0, -height * 0.2, width * 10, height);
 
@@ -132,7 +143,7 @@ export default class GameScene extends Phaser.Scene
     }
 
     createPlayer() {
-        const player = this.physics.add.sprite(100, 450, GIRL_PLAYER);
+        const player = this.physics.add.sprite(110, 450, GIRL_PLAYER);
         player.setBounce(0.2);
         player.setCollideWorldBounds(true);
     
@@ -158,5 +169,22 @@ export default class GameScene extends Phaser.Scene
        })
        
        return player;
+    }
+
+    createBoxChallenges() {
+        const crate = this.physics.add.group({
+            key: CRATE,
+            repeat: 4,
+            setXY: { x:400, y: 50, stepX: 600 }
+        });
+
+        crate.children.iterate((child) => {
+                    child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8))
+        });
+        return crate;
+    }
+
+    collectStar (player, box) {
+        box.disableBody(true, true);
     }
 }
