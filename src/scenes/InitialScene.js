@@ -20,7 +20,6 @@ export default class GameScene extends Phaser.Scene
     const height = this.scale.height;
 
     this.gameScene = this.scene.get('game-scene');
-    this
   }
 
   update() {

@@ -43,6 +43,9 @@ export default class GameScene extends Phaser.Scene
     /** @type {Phaser.Physics.Arcade.StaticGroup} */
     platforms;
 
+    /** @type {Phaser.Scene} */
+    initialScene;
+
 	constructor()
 	{
         super('game-scene');
@@ -90,18 +93,23 @@ export default class GameScene extends Phaser.Scene
         this.challenges = this.createBoxChallenges();
         this.physics.add.collider(this.player, this.platforms);
         this.physics.add.collider(this.challenges, this.platforms);
-        this.physics.add.overlap(this.player, this.challenges, this.collectStar, null, this);
+        this.physics.add.overlap(this.player, this.challenges, this.collectBox, null, this);
 
         this.cameras.main.setBounds(0, 0, width * 10, height);
         this.physics.world.setBounds(0, -height * 0.2, width * 10, height);
 
-        this.gameScene = this.scene.get('initial-scene');
+        //jump controls
+        this.input.on('pointerdown', this.startJump, this);
+        const upButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+        upButton.on('down', this.startJump, this);
+
+        this.initialScene = this.scene.get('initial-scene');
         this.scene.launch('initial-scene');
     }
 
     update() {
         const camera = this.cameras.main;
-        const speed = 4;
+        const speed = 3;
 
         if(this.cursors.left.isDown){
             camera.scrollX -= speed; 
@@ -114,11 +122,11 @@ export default class GameScene extends Phaser.Scene
         } else {
             this.player.setVelocityX(0);
             this.player.anims.play('turn');
-        }
+        } 
+    }
 
-        if((this.cursors.space.isDown) && this.cursors.space.isDown) {
-            this.player.setVelocityY(-250);
-        }
+    startJump(){
+        this.player.setVelocityY(-360);
     }
 
     createPlatforms() {
@@ -148,16 +156,16 @@ export default class GameScene extends Phaser.Scene
         player.setCollideWorldBounds(true);
     
         this.anims.create({
-         key: 'left',
-         frames: this.anims.generateFrameNumbers(GIRL_PLAYER, {frames: [ 0, 2 ]}),
-         frameRate: 5,
-         repeat: -1
+            key: 'left',
+            frames: this.anims.generateFrameNumbers(GIRL_PLAYER, {frames: [ 0, 2 ]}),
+            frameRate: 5,
+            repeat: -1
         });
     
        this.anims.create({
-                key: 'turn',
-                frames: [{ key: GIRL_PLAYER, frame: 4 }],
-                frameRate: 20
+            key: 'turn',
+            frames: [{ key: GIRL_PLAYER, frame: 4 }],
+            frameRate: 20
        })
         
        
@@ -184,7 +192,7 @@ export default class GameScene extends Phaser.Scene
         return crate;
     }
 
-    collectStar (player, box) {
+    collectBox (box) {
         box.disableBody(true, true);
     }
 }
