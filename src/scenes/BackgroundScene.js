@@ -36,9 +36,13 @@ const repeatBackgroundAssets = (scene, totalWidth, texture, scrollFactor) => {
 
 export default class BackgroundScene extends Phaser.Scene
 {
+    /** @type {Phaser.Physics.Arcade.StaticGroup} */
+    platforms;
+
 	constructor()
 	{
-		super("background-scene");
+        super('background-scene');
+        this.platforms = null;
 	}
 
 	preload()
@@ -52,6 +56,8 @@ export default class BackgroundScene extends Phaser.Scene
         this.load.image(PLATFORM_LEFT, 'assets/platform_left.png'); 
         this.load.image(PLATFORM_MIDDLE, 'assets/platform_middle.png');
         this.load.image(PLATFORM_RIGHT, 'assets/platform_right.png');
+
+        this.load.spritesheet('girlplayer', 'assets/female_tilesheet.png', { frameWidth: 80, frameHeight: 100 });
 
         this.cursors = this.input.keyboard.createCursorKeys();
     }
@@ -70,14 +76,17 @@ export default class BackgroundScene extends Phaser.Scene
         repeatBackgroundAssets(this, totalWidth, GROUND, 1);
         repeatBackgroundAssets(this, totalWidth, PLANTS, 1.25);
         
-        const platforms = this.createPlatforms();
+        this.platforms = this.createPlatforms();
 
         this.cameras.main.setBounds(0, 0, width * 10, height);
+
+        this.gameScene = this.scene.get('game-scene');
+        this.scene.launch('game-scene');
     }
 
     update() {
         const camera = this.cameras.main;
-        const speed = 15;
+        const speed = 3;
 
         if(this.cursors.left.isDown){
             camera.scrollX -= speed; 
@@ -92,7 +101,6 @@ export default class BackgroundScene extends Phaser.Scene
 
         const platforms = this.physics.add.staticGroup();
         
-        console.log(width * 0.9);
         platforms.create(450, height * 0.6, PLATFORM_LEFT);
         platforms.create(578, height * 0.6, PLATFORM_MIDDLE);
         platforms.create(706, height * 0.6, PLATFORM_RIGHT);
