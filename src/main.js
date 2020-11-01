@@ -1,4 +1,5 @@
 import Phaser, { Game } from 'phaser'
+import FirstChallengeScene from './scenes/FirstChallengeScene'
 import GameScene from './scenes/GameScene'
 import InitialScene from './scenes/InitialScene'
 
@@ -17,7 +18,7 @@ const config = {
 			gravity: { y: 300 }
 		}
 	},
-	scene: [GameScene, InitialScene]
+	scene: [GameScene, InitialScene, FirstChallengeScene]
 }
 
 export default new Phaser.Game(config)

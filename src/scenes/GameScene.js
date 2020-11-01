@@ -147,6 +147,10 @@ export default class GameScene extends Phaser.Scene
         platforms.create(1518, height * 0.2, PLATFORM_MIDDLE);
         platforms.create(1646, height * 0.2, PLATFORM_RIGHT);
 
+        platforms.create(2000, height * 0.5, PLATFORM_LEFT);
+        platforms.create(2128, height * 0.5, PLATFORM_MIDDLE);
+        platforms.create(2256, height * 0.5, PLATFORM_RIGHT);
+
         return platforms;
     }
 
@@ -180,19 +184,53 @@ export default class GameScene extends Phaser.Scene
     }
 
     createBoxChallenges() {
-        const crate = this.physics.add.group({
-            key: CRATE,
-            repeat: 4,
-            setXY: { x:400, y: 50, stepX: 600 }
-        });
+        let horizontalSpacing = 400;
+        const crate = this.physics.add.group();
+        for (let i = 0; i < 4; i++) {
+            let crateObject = this.physics.add.image(horizontalSpacing, 50, CRATE)
+            crateObject.name = `CRATE_${i}`
+            crate.add(crateObject);
+
+            horizontalSpacing += crateObject.width * 7;
+        }
+        
 
         crate.children.iterate((child) => {
                     child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8))
         });
+
+        console.log(crate);
+        
         return crate;
     }
 
-    collectBox (box) {
+    collectBox (player, box) {
         box.disableBody(true, true);
+        this.showChallangeScene(box.name);
+    }
+
+    showChallangeScene(boxName) {
+       let challangeScene;
+       switch (boxName) {
+           case 'CRATE_0':
+               challangeScene = this.scene.get('first-challenge-scene');
+               this.scene.launch('first-challenge-scene');
+            break;
+
+            case 'CRATE_1':
+               
+            break;
+
+            case 'CRATE_2':
+               
+            break;
+
+            case 'CRATE_3':
+               
+            break;
+       
+           default:
+               break;
+       }
     }
 }
