@@ -34,13 +34,11 @@ export default class FirstChallengeScene extends Phaser.Scene {
     }
 
     create() {
-        console.log('criei!');
-
         const width = this.scale.width;
         const height = this.scale.height;
 
         this.container = this.add.container(width * 0.5, 200);
-        const panel = this.add.nineslice(-width * 0.28, -height * 0.2, width * 0.5, height * 0.8, 'panel', 24).setOrigin(0,0);
+        const panel = this.add.nineslice(-width * 0.28, -height * 0.2, width * 0.5, height * 0.8, 'panel1', 24).setOrigin(0,0);
         
         const children = this.add.nineslice(-width * 0.07, -height * 0.1, 150, 200, SAD_CHILDREN_KEY, 24).setOrigin(0,0);
         this.contentText = this.createContentText(-width * 0.22, height * 0.2, CHALLENGETEXT).setOrigin(0,0);
@@ -74,15 +72,15 @@ export default class FirstChallengeScene extends Phaser.Scene {
         this.container.add(btnRightIcon);
 
         buttonLeft.setInteractive()
-                  .on('pointerdown', () => { this.checkAnswer(false) })
+                  .on('pointerdown', () => { this.checkAnswer(false, buttonLeft); buttonLeft.setTint(0xff0000)})
                   .on('pointerover', () => { buttonLeft.setTint(0xfadcaa); })
                   .on('pointerout', () => { buttonLeft.clearTint(); })
         buttonMiddle.setInteractive()
-                    .on('pointerdown', () => { this.checkAnswer(true) })
+                    .on('pointerdown', () => { this.checkAnswer(true, buttonMiddle); buttonMiddle.setTint(0xff00) })
                     .on('pointerover', () => { buttonMiddle.setTint(0xfadcaa); })
                     .on('pointerout', () => { buttonMiddle.clearTint(); })
         buttonRight.setInteractive()
-                   .on('pointerdown', () => { this.checkAnswer(false) })
+                   .on('pointerdown', () => { this.checkAnswer(false, buttonRight); buttonRight.setTint(0xff0000) })
                    .on('pointerover', () => { buttonRight.setTint(0xfadcaa); })
                    .on('pointerout', () => { buttonRight.clearTint(); })
     }
@@ -110,10 +108,16 @@ export default class FirstChallengeScene extends Phaser.Scene {
     }
 
 
-    checkAnswer(isCorrect) {
+    checkAnswer(isCorrect, button) {
         if(isCorrect == true) {
-            this.scene.stop('first-challenge-scene');
-            this.scene.resume('game-scene');
+            const successScene = this.scene.get('correct-answer-scene');
+            this.scene.launch('correct-answer-scene');
+            this.scene.pause();
+
+        } else {
+            setTimeout(() => {
+                button.clearTint();
+            }, 500);
         }
     }
 }

@@ -11,7 +11,8 @@ const PLATFORM_MIDDLE = 'platformmiddle';
 const PLATFORM_RIGHT = 'platformright';
 const SIGN = 'sign_right';
 const CRATE = 'crate';
-const PANEL = 'panel';
+const PANEL_1 = 'panel1';
+const PANEL_2 = 'panel2';
 
 const BUTTON = 'button';
 const BUTTON_PRESSED = 'buttonpressed';
@@ -69,9 +70,11 @@ export default class GameScene extends Phaser.Scene
         this.load.image(PLATFORM_RIGHT, 'assets/platform_right.png');
         this.load.image(SIGN, 'assets/sign.png');
         this.load.image(CRATE, 'assets/crate.png');
-        this.load.image(PANEL, 'assets/panel.png');
+        this.load.image(PANEL_1, 'assets/panel_1.png');
+        this.load.image(PANEL_2, 'assets/panel_2.png');
         this.load.image(BUTTON, 'assets/button.png');
         this.load.image(BUTTON_PRESSED, 'assets/button_pressed.png');
+        this.load.image('correct', 'assets/green_checkmark.png');
 
         this.load.spritesheet('girlplayer', 'assets/female_tilesheet.png', { frameWidth: 80, frameHeight: 100 });
 
