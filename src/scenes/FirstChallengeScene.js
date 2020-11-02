@@ -74,11 +74,17 @@ export default class FirstChallengeScene extends Phaser.Scene {
         this.container.add(btnRightIcon);
 
         buttonLeft.setInteractive()
-                  . on('pointerdown', () => { this.checkAnswer(false) })
-        buttonMiddle.setInteractive().
-                    on('pointerdown', () => { this.checkAnswer(true) })
+                  .on('pointerdown', () => { this.checkAnswer(false) })
+                  .on('pointerover', () => { buttonLeft.setTint(0xfadcaa); })
+                  .on('pointerout', () => { buttonLeft.clearTint(); })
+        buttonMiddle.setInteractive()
+                    .on('pointerdown', () => { this.checkAnswer(true) })
+                    .on('pointerover', () => { buttonMiddle.setTint(0xfadcaa); })
+                    .on('pointerout', () => { buttonMiddle.clearTint(); })
         buttonRight.setInteractive()
                    .on('pointerdown', () => { this.checkAnswer(false) })
+                   .on('pointerover', () => { buttonRight.setTint(0xfadcaa); })
+                   .on('pointerout', () => { buttonRight.clearTint(); })
     }
 
     update() {
