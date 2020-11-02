@@ -55,7 +55,8 @@ export default class GameScene extends Phaser.Scene
 	{
         super('game-scene');
         this.platforms = undefined;
-	}
+    }
+    
 
 	preload()
     {
@@ -76,7 +77,7 @@ export default class GameScene extends Phaser.Scene
         this.load.image(BUTTON_PRESSED, 'assets/button_pressed.png');
         this.load.image('correct', 'assets/green_checkmark.png');
 
-        this.load.spritesheet('girlplayer', 'assets/female_tilesheet.png', { frameWidth: 80, frameHeight: 100 });
+        this.load.spritesheet('girlplayer', 'assets/female_tilesheet.png', { frameWidth: 80, frameHeight: 110 });
 
         this.cursors = this.input.keyboard.createCursorKeys();
     }
@@ -108,6 +109,7 @@ export default class GameScene extends Phaser.Scene
         this.cameras.main.setBounds(0, 0, width * 10, height);
         this.physics.world.setBounds(0, -height * 0.2, width * 10, height);
 
+        
         //jump controls
         this.input.on('pointerdown', this.startJump, this);
         const upButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -119,6 +121,8 @@ export default class GameScene extends Phaser.Scene
     }
 
     update() {
+        this.cursors = undefined;
+        this.cursors = this.input.keyboard.createCursorKeys();
         const camera = this.cameras.main;
         const speed = 3;
 
@@ -179,7 +183,7 @@ export default class GameScene extends Phaser.Scene
     
        this.anims.create({
             key: 'turn',
-            frames: [{ key: GIRL_PLAYER, frame: 4 }],
+            frames: [{ key: GIRL_PLAYER, frame: 23 }],
             frameRate: 20
        })
         
@@ -242,5 +246,10 @@ export default class GameScene extends Phaser.Scene
            default:
                break;
        }
+    }
+
+    resetCursors() {
+        this.cursors.left.reset();
+        this.cursors.right.reset();
     }
 }

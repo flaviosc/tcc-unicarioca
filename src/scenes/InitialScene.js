@@ -1,8 +1,5 @@
 import Phaser from 'phaser';
 
-/** @type {string} */
-const GIRL_PLAYER = 'girlplayer';
-
 export default class GameScene extends Phaser.Scene
 {
   /** @type {Phaser.Scene} */

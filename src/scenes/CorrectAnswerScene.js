@@ -59,5 +59,6 @@ export default class CorrectAnswerScene extends Phaser.Scene {
         this.scene.stop();
         const gameScene = this.scene.get('game-scene');
         this.scene.resume('game-scene');
+        gameScene.resetCursors();
     }
 }
