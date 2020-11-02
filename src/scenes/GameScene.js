@@ -11,6 +11,10 @@ const PLATFORM_MIDDLE = 'platformmiddle';
 const PLATFORM_RIGHT = 'platformright';
 const SIGN = 'sign_right';
 const CRATE = 'crate';
+const PANEL = 'panel';
+
+const BUTTON = 'button';
+const BUTTON_PRESSED = 'buttonpressed';
 
 const GIRL_PLAYER = 'girlplayer';
 
@@ -44,7 +48,7 @@ export default class GameScene extends Phaser.Scene
     platforms;
 
     /** @type {Phaser.Scene} */
-    initialScene;
+    initialScene; firstChallenge;
 
 	constructor()
 	{
@@ -65,6 +69,9 @@ export default class GameScene extends Phaser.Scene
         this.load.image(PLATFORM_RIGHT, 'assets/platform_right.png');
         this.load.image(SIGN, 'assets/sign.png');
         this.load.image(CRATE, 'assets/crate.png');
+        this.load.image(PANEL, 'assets/panel.png');
+        this.load.image(BUTTON, 'assets/button.png');
+        this.load.image(BUTTON_PRESSED, 'assets/button_pressed.png');
 
         this.load.spritesheet('girlplayer', 'assets/female_tilesheet.png', { frameWidth: 80, frameHeight: 100 });
 
@@ -105,6 +112,7 @@ export default class GameScene extends Phaser.Scene
 
         this.initialScene = this.scene.get('initial-scene');
         this.scene.launch('initial-scene');
+
     }
 
     update() {
@@ -198,8 +206,6 @@ export default class GameScene extends Phaser.Scene
         crate.children.iterate((child) => {
                     child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8))
         });
-
-        console.log(crate);
         
         return crate;
     }
@@ -215,6 +221,7 @@ export default class GameScene extends Phaser.Scene
            case 'CRATE_0':
                challangeScene = this.scene.get('first-challenge-scene');
                this.scene.launch('first-challenge-scene');
+               this.scene.pause();
             break;
 
             case 'CRATE_1':

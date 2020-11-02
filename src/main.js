@@ -1,7 +1,9 @@
-import Phaser, { Game } from 'phaser'
-import FirstChallengeScene from './scenes/FirstChallengeScene'
-import GameScene from './scenes/GameScene'
-import InitialScene from './scenes/InitialScene'
+import Phaser, { Game } from 'phaser';
+import { Plugin as NineSlicePlugin } from 'phaser3-nineslice';
+
+import FirstChallengeScene from './scenes/FirstChallengeScene';
+import GameScene from './scenes/GameScene';
+import InitialScene from './scenes/InitialScene';
 
 
 const config = {
@@ -17,6 +19,9 @@ const config = {
 		arcade: {
 			gravity: { y: 300 }
 		}
+	},
+	plugins: {
+		global: [ NineSlicePlugin.DefaultCfg ],
 	},
 	scene: [GameScene, InitialScene, FirstChallengeScene]
 }
