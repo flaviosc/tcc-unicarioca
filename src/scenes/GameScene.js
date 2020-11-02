@@ -4,6 +4,7 @@ const SKY = 'sky';
 const MOUNTAIN = 'mointains';
 const PLATEAU = 'plateau';
 const GROUND = 'ground';
+const GRASS = 'grass';
 const PLANTS = 'plants';
 
 const PLATFORM_LEFT = 'platformleft';
@@ -13,9 +14,8 @@ const SIGN = 'sign_right';
 const CRATE = 'crate';
 const PANEL_1 = 'panel1';
 const PANEL_2 = 'panel2';
-
 const BUTTON = 'button';
-const BUTTON_PRESSED = 'buttonpressed';
+const GREEN_CHECK = 'correct';
 
 const GIRL_PLAYER = 'girlplayer';
 
@@ -42,7 +42,6 @@ const repeatBackgroundAssets = (scene, totalWidth, texture, scrollFactor) => {
     }
 }
 
-
 export default class GameScene extends Phaser.Scene
 {
     /** @type {Phaser.Physics.Arcade.StaticGroup} */
@@ -63,19 +62,19 @@ export default class GameScene extends Phaser.Scene
         this.load.image(SKY, 'assets/sky.png'); 
         this.load.image(MOUNTAIN, 'assets/mountains.png');
         this.load.image(PLATEAU, 'assets/plateau.png');
-        this.load.image(GROUND, 'assets/ground.png');
+        this.load.image(GROUND, 'assets/ground_2.png');
+        this.load.image(GRASS, 'assets/ground_3.png');
         this.load.image(PLANTS, 'assets/plant.png');
 
         this.load.image(PLATFORM_LEFT, 'assets/platform_left.png'); 
         this.load.image(PLATFORM_MIDDLE, 'assets/platform_middle.png');
         this.load.image(PLATFORM_RIGHT, 'assets/platform_right.png');
         this.load.image(SIGN, 'assets/sign.png');
-        this.load.image(CRATE, 'assets/crate.png');
+        this.load.image(CRATE, 'assets/question_box.png');
         this.load.image(PANEL_1, 'assets/panel_1.png');
         this.load.image(PANEL_2, 'assets/panel_2.png');
         this.load.image(BUTTON, 'assets/button.png');
-        this.load.image(BUTTON_PRESSED, 'assets/button_pressed.png');
-        this.load.image('correct', 'assets/green_checkmark.png');
+        this.load.image(GREEN_CHECK, 'assets/green_checkmark.png');
 
         this.load.spritesheet('girlplayer', 'assets/female_tilesheet.png', { frameWidth: 80, frameHeight: 110 });
 
@@ -93,7 +92,10 @@ export default class GameScene extends Phaser.Scene
    
         repeatBackgroundAssets(this, totalWidth, MOUNTAIN, 0.25);
         repeatBackgroundAssets(this, totalWidth, PLATEAU, 0.50);
-        repeatBackgroundAssets(this, totalWidth, GROUND, 1);
+
+        const ground = this.createGround(height, GROUND);
+        const grass = this.createGround(height - 90, GRASS);
+        // repeatBackgroundAssets(this, totalWidth, GROUND, 1);
         repeatBackgroundAssets(this, totalWidth, PLANTS, 1.25);
 
         this.add.image(25, height * 0.8, SIGN)
@@ -102,27 +104,24 @@ export default class GameScene extends Phaser.Scene
         this.platforms = this.createPlatforms();
         this.player = this.createPlayer();
         this.challenges = this.createBoxChallenges();
+        this.physics.add.collider(this.player, ground);
         this.physics.add.collider(this.player, this.platforms);
         this.physics.add.collider(this.challenges, this.platforms);
+        this.physics.add.collider(this.challenges, ground);
         this.physics.add.overlap(this.player, this.challenges, this.collectBox, null, this);
 
-        this.cameras.main.setBounds(0, 0, width * 10, height);
-        this.physics.world.setBounds(0, -height * 0.2, width * 10, height);
+        this.cameras.main.setBounds(0, 0, width * 3, height);
+        this.physics.world.setBounds(0, -height * 0.2, width * 3, height);
 
         
-        //jump controls
+        //touch controls
         this.input.on('pointerdown', this.startJump, this);
-        const upButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
-        upButton.on('down', this.startJump, this);
 
         this.initialScene = this.scene.get('initial-scene');
         this.scene.launch('initial-scene');
-
     }
 
     update() {
-        this.cursors = undefined;
-        this.cursors = this.input.keyboard.createCursorKeys();
         const camera = this.cameras.main;
         const speed = 3;
 
@@ -138,10 +137,29 @@ export default class GameScene extends Phaser.Scene
             this.player.setVelocityX(0);
             this.player.anims.play('turn');
         } 
+
+        if(this.cursors.up.isDown) {
+            this.startJump();
+        }
     }
 
     startJump(){
-        this.player.setVelocityY(-360);
+        if(this.player.body.touching.down) {
+            this.player.setVelocityY(-300);
+        }
+    }
+
+    createGround(height, key) {
+        let groundWidth = 450;
+        const ground = this.physics.add.staticGroup().setOrigin(0, 0);
+        
+        for (let i = 0; i < 5; i++) {
+            ground.create(groundWidth, height - 80, key);
+            
+            groundWidth += groundWidth;
+        }        
+
+        return ground;
     }
 
     createPlatforms() {
@@ -199,7 +217,7 @@ export default class GameScene extends Phaser.Scene
     }
 
     createBoxChallenges() {
-        let horizontalSpacing = 400;
+        let horizontalSpacing = 600;
         const crate = this.physics.add.group();
         for (let i = 0; i < 4; i++) {
             let crateObject = this.physics.add.image(horizontalSpacing, 50, CRATE)
@@ -211,7 +229,7 @@ export default class GameScene extends Phaser.Scene
         
 
         crate.children.iterate((child) => {
-                    child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8))
+                    child.body.gameObject.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8))
         });
         
         return crate;
@@ -251,5 +269,6 @@ export default class GameScene extends Phaser.Scene
     resetCursors() {
         this.cursors.left.reset();
         this.cursors.right.reset();
+        this.cursors.up.reset();
     }
 }
