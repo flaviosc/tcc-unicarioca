@@ -76,7 +76,7 @@ export default class GameScene extends Phaser.Scene
         this.load.image(BUTTON, 'assets/button.png');
         this.load.image(GREEN_CHECK, 'assets/green_checkmark.png');
 
-        this.load.spritesheet('girlplayer', 'assets/female_tilesheet.png', { frameWidth: 80, frameHeight: 110 });
+        this.load.spritesheet('girlplayer', 'assets/female_tilesheet.png', { frameWidth: 80, frameHeight: 111 });
 
         this.cursors = this.input.keyboard.createCursorKeys();
     }
@@ -110,8 +110,9 @@ export default class GameScene extends Phaser.Scene
         this.physics.add.collider(this.challenges, ground);
         this.physics.add.overlap(this.player, this.challenges, this.collectBox, null, this);
 
-        this.cameras.main.setBounds(0, 0, width * 3, height);
-        this.physics.world.setBounds(0, -height * 0.2, width * 3, height);
+        this.cameras.main.setBounds(0, 0, width * 2.8, height);
+        this.cameras.main.startFollow(this.player, false, 0.1, 0.1);
+        this.physics.world.setBounds(0, -height * 0.2, width * 2.8, height);
 
         
         //touch controls
@@ -122,15 +123,15 @@ export default class GameScene extends Phaser.Scene
     }
 
     update() {
-        const camera = this.cameras.main;
-        const speed = 3;
+        // const camera = this.cameras.main;
+        // const speed = 3;
 
         if(this.cursors.left.isDown){
-            camera.scrollX -= speed; 
+            // camera.scrollX -= speed; 
             this.player.setVelocityX(-300);
             this.player.anims.play('left', true);
         } else if (this.cursors.right.isDown) {
-            camera.scrollX += speed;
+            // camera.scrollX += speed;
             this.player.setVelocityX(300);
             this.player.anims.play('right', true);
         } else {
