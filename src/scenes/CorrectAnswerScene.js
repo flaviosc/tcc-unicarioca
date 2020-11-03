@@ -7,6 +7,7 @@ const SUCCESSTEXT =
 
 const BUTTONTEXT = `Continuar`;
 
+const SCENE_POINTS = 100;
 
 export default class CorrectAnswerScene extends Phaser.Scene {
 
@@ -60,5 +61,6 @@ export default class CorrectAnswerScene extends Phaser.Scene {
         const gameScene = this.scene.get('game-scene');
         this.scene.resume('game-scene');
         gameScene.resetCursors();
+        gameScene.updateScore(SCENE_POINTS);
     }
 }

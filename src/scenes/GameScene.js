@@ -1,5 +1,7 @@
 import Phaser, { Cameras } from 'phaser';
 
+import ScoreLabel from '../ui/ScoreLabel';
+
 const SKY = 'sky';
 const MOUNTAIN = 'mointains';
 const PLATEAU = 'plateau';
@@ -95,8 +97,9 @@ export default class GameScene extends Phaser.Scene
 
         const ground = this.createGround(height, GROUND);
         const grass = this.createGround(height - 90, GRASS);
-        // repeatBackgroundAssets(this, totalWidth, GROUND, 1);
         repeatBackgroundAssets(this, totalWidth, PLANTS, 1.25);
+
+        this.scoreLabel = this.createScoreLabel(16, 16, 0).setScrollFactor(0);
 
         this.add.image(25, height * 0.8, SIGN)
                 .setOrigin(0, 1);
@@ -123,17 +126,15 @@ export default class GameScene extends Phaser.Scene
     }
 
     update() {
-        // const camera = this.cameras.main;
-        // const speed = 3;
 
         if(this.cursors.left.isDown){
-            // camera.scrollX -= speed; 
             this.player.setVelocityX(-300);
             this.player.anims.play('left', true);
+            this.player.setFlipX(true);
         } else if (this.cursors.right.isDown) {
-            // camera.scrollX += speed;
             this.player.setVelocityX(300);
             this.player.anims.play('right', true);
+            this.player.setFlipX(false);
         } else {
             this.player.setVelocityX(0);
             this.player.anims.play('turn');
@@ -189,13 +190,13 @@ export default class GameScene extends Phaser.Scene
     }
 
     createPlayer() {
-        const player = this.physics.add.sprite(110, 450, GIRL_PLAYER);
+        const player = this.physics.add.sprite(110, 451, GIRL_PLAYER);
         player.setBounce(0.2);
         player.setCollideWorldBounds(true);
     
         this.anims.create({
             key: 'left',
-            frames: this.anims.generateFrameNumbers(GIRL_PLAYER, {frames: [ 0, 2 ]}),
+            frames: this.anims.generateFrameNumbers(GIRL_PLAYER, {frames: [ 0, 1 ]}),
             frameRate: 5,
             repeat: -1
         });
@@ -271,5 +272,16 @@ export default class GameScene extends Phaser.Scene
         this.cursors.left.reset();
         this.cursors.right.reset();
         this.cursors.up.reset();
+    }
+
+    createScoreLabel(x, y, text) {
+        const style = { fontSize: '32px', fill: '#000' };
+        const label = new ScoreLabel(this, x, y, text, style);
+        this.add.existing(label);
+        return label;
+    }
+
+    updateScore(points) {
+        this.scoreLabel.add(points);
     }
 }
