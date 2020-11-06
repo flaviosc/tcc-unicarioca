@@ -1,23 +1,19 @@
-import Phaser from 'phaser';
+import Phaser, { Game } from 'phaser';
+import { Plugin as NineSlicePlugin } from 'phaser3-nineslice';
 
+import CorrectAnswerScene from './scenes/CorrectAnswerScene';
+import FirstChallengeScene from './scenes/FirstChallengeScene';
 import GameScene from './scenes/GameScene';
-import BackgroundScene from './scenes/BackgroundScene';
+import InitialScene from './scenes/InitialScene';
+
 
 const config = {
 	type: Phaser.AUTO,
+	width: 800,
+	height: 600,
 	scale: {
 		mode: Phaser.Scale.RESIZE,
 		parent: 'game-scene',
-        width: 640,
-        height: 960,
-        min: {
-            width: 320,
-            height: 480
-        },
-        max: {
-            width: 1400,
-            height: 1200
-		}
 	},
 	physics: {
 		default: 'arcade',
@@ -25,7 +21,10 @@ const config = {
 			gravity: { y: 200 }
 		}
 	},
-	scene: [BackgroundScene, GameScene]
+	plugins: {
+		global: [ NineSlicePlugin.DefaultCfg ],
+	},
+	scene: [GameScene, InitialScene, FirstChallengeScene, CorrectAnswerScene]
 }
 
 export default new Phaser.Game(config)
