@@ -73,9 +73,7 @@ export default class GameScene extends Phaser.Scene
         this.load.image(PLATFORM_RIGHT, 'assets/platform_right.png');
         this.load.image(SIGN, 'assets/sign.png');
         this.load.image(CRATE, 'assets/question_box.png');
-        this.load.image(PANEL_1, 'assets/panel_1.png');
         this.load.image(PANEL_2, 'assets/panel_2.png');
-        this.load.image(BUTTON, 'assets/button.png');
         this.load.image(GREEN_CHECK, 'assets/green_checkmark.png');
 
         this.load.spritesheet('girlplayer', 'assets/female_tilesheet.png', { frameWidth: 80, frameHeight: 111 });
@@ -121,8 +119,9 @@ export default class GameScene extends Phaser.Scene
         //touch controls
         this.input.on('pointerdown', this.startJump, this);
 
-        this.initialScene = this.scene.get('initial-scene');
-        this.scene.launch('initial-scene');
+        this.startModal = this.scene.get('start-modal');
+        this.scene.launch('start-modal');
+        this.scene.pause();
     }
 
     update() {

@@ -4,7 +4,7 @@ import { Plugin as NineSlicePlugin } from 'phaser3-nineslice';
 import CorrectAnswerScene from './scenes/CorrectAnswerScene';
 import FirstChallengeScene from './scenes/FirstChallengeScene';
 import GameScene from './scenes/GameScene';
-import InitialScene from './scenes/InitialScene';
+import StartModal from './scenes/StartModal';
 
 
 const config = {
@@ -24,7 +24,7 @@ const config = {
 	plugins: {
 		global: [ NineSlicePlugin.DefaultCfg ],
 	},
-	scene: [GameScene, InitialScene, FirstChallengeScene, CorrectAnswerScene]
+	scene: [GameScene, StartModal, FirstChallengeScene, CorrectAnswerScene]
 }
 
 export default new Phaser.Game(config)

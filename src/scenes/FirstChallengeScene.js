@@ -107,7 +107,6 @@ export default class FirstChallengeScene extends Phaser.Scene {
         return label;
     }
 
-
     checkAnswer(isCorrect, button) {
         if(isCorrect == true) {
             const successScene = this.scene.get('correct-answer-scene');
