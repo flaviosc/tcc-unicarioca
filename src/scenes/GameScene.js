@@ -2,6 +2,9 @@ import Phaser, { Cameras } from 'phaser';
 
 import ScoreLabel from '../ui/ScoreLabel';
 
+const GAME_WIDTH = 640;
+const GAME_HEIGHT = 960;
+
 const SKY = 'sky';
 const MOUNTAIN = 'mointains';
 const PLATEAU = 'plateau';
@@ -14,10 +17,11 @@ const PLATFORM_MIDDLE = 'platformmiddle';
 const PLATFORM_RIGHT = 'platformright';
 const SIGN = 'sign_right';
 const CRATE = 'crate';
-const PANEL_1 = 'panel1';
 const PANEL_2 = 'panel2';
-const BUTTON = 'button';
 const GREEN_CHECK = 'correct';
+const ARROW_LEFT = 'arrowleft';
+const ARROW_RIGHT = 'arrowright';
+const BUTTON_JUMP = 'buttonjump';
 
 const GIRL_PLAYER = 'girlplayer';
 
@@ -50,7 +54,11 @@ export default class GameScene extends Phaser.Scene
     platforms;
 
     /** @type {Phaser.Scene} */
-    initialScene; firstChallenge;
+    firstChallenge;
+
+    /** @type {boolean} */
+    isTouch; isRunningToLeft; isRunningToRight; isPlayerJump;
+
 
 	constructor()
 	{
@@ -75,6 +83,9 @@ export default class GameScene extends Phaser.Scene
         this.load.image(CRATE, 'assets/question_box.png');
         this.load.image(PANEL_2, 'assets/panel_2.png');
         this.load.image(GREEN_CHECK, 'assets/green_checkmark.png');
+        this.load.image(ARROW_LEFT, 'assets/arrow_left.png');
+        this.load.image(ARROW_RIGHT, 'assets/arrow_right.png');
+        this.load.image(BUTTON_JUMP, 'assets/button_jump.png');
 
         this.load.spritesheet('girlplayer', 'assets/female_tilesheet.png', { frameWidth: 80, frameHeight: 111 });
 
@@ -86,6 +97,15 @@ export default class GameScene extends Phaser.Scene
         const width = this.scale.width;
         const height = this.scale.height;
         const totalWidth = width * 10;
+        this.parent = new Phaser.Structs.Size(width, height);
+        this.sizer = new Phaser.Structs.Size(width, height, Phaser.Structs.Size.FIT, this.parent);
+
+        this.parent.setSize(width, height);
+        this.sizer.setSize(width, height);
+
+        this.updateCamera();
+        
+        this.scale.on('resize', this.resize, this);
 
         this.add.image(width * 0.5, height * 0.5, SKY)
                 .setScrollFactor(0);
@@ -117,7 +137,29 @@ export default class GameScene extends Phaser.Scene
 
         
         //touch controls
-        this.input.on('pointerdown', this.startJump, this);
+        this.checkDevice();
+        if(this.isTouch == true) {
+            const pointer1 = this.input.addPointer();
+            const pointer2 = this.input.addPointer();
+
+            const arrowLeft = this.add.nineslice(width * 0.1, height * 0.82, 40, 50, ARROW_LEFT, 0)
+                    .setInteractive()
+                    .on('pointerdown', () => { this.isRunningToLeft = true; })
+                    .on('pointerup', () => { this.isRunningToLeft = false })
+                    .setScrollFactor(0);
+            
+            const arrowRight = this.add.nineslice(width * 0.3, height * 0.82, 40, 50, ARROW_RIGHT, 0)
+                    .setInteractive()
+                    .on ('pointerdown', () => { this.isRunningToRight = true })
+                    .on('pointerup', () => { this.isRunningToRight = false; })
+                    .setScrollFactor(0);
+
+            const buttonJump = this.add.nineslice(width * 0.8, height * 0.82, 40, 50, BUTTON_JUMP, 0)
+                    .setInteractive()
+                    .on ('pointerdown', () => { this.isPlayerJump = true })
+                    .on('pointerup', () => { this.isPlayerJump = false; })
+                    .setScrollFactor(0);
+        }
 
         this.startModal = this.scene.get('start-modal');
         this.scene.launch('start-modal');
@@ -125,12 +167,11 @@ export default class GameScene extends Phaser.Scene
     }
 
     update() {
-
-        if(this.cursors.left.isDown){
+        if(this.cursors.left.isDown || this.isRunningToLeft){
             this.player.setVelocityX(-300);
             this.player.anims.play('left', true);
             this.player.setFlipX(true);
-        } else if (this.cursors.right.isDown) {
+        } else if (this.cursors.right.isDown || this.isRunningToRight) {
             this.player.setVelocityX(300);
             this.player.anims.play('right', true);
             this.player.setFlipX(false);
@@ -139,7 +180,7 @@ export default class GameScene extends Phaser.Scene
             this.player.anims.play('turn');
         } 
 
-        if(this.cursors.up.isDown) {
+        if(this.cursors.up.isDown || this.isPlayerJump) {
             this.startJump();
         }
     }
@@ -282,5 +323,44 @@ export default class GameScene extends Phaser.Scene
 
     updateScore(points) {
         this.scoreLabel.add(points);
+    }
+
+    checkDevice() {
+        if (this.sys.game.device.os.desktop){
+            console.log("desktop");
+            this.isTouch = false;
+        }
+        else{
+            console.log("mobile");
+            this.isTouch = true;
+        }
+    }
+
+    resize (gameSize) {
+        const width = gameSize.width;
+        const height = gameSize.height;
+    
+        this.parent.setSize(width, height);
+        this.sizer.setSize(width, height);
+    
+        this.updateCamera();
+    }
+
+    updateCamera ()
+    {
+        const width = this.scale.gameSize.width;
+        const height = this.scale.gameSize.height;
+
+        const camera = this.cameras.main;
+
+        const zoom = this.getZoom();
+        const offset = 120 * zoom;
+
+        camera.setZoom(zoom);
+        camera.centerOn(1400 / 2, (1200 / 2) + 120);
+    }
+
+    getZoom () {
+        return this.cameras.main.zoom;
     }
 }
