@@ -37,10 +37,10 @@ const repeatBackgroundAssets = (scene, totalWidth, texture, scrollFactor) => {
     const sourceWidth = scene.textures.get(texture).getSourceImage().width;    
     const count = Math.ceil(totalWidth / sourceWidth) * scrollFactor;
 
-    let x = 0;
+    let x = -110;
 
     for (let i = 0; i < count; ++i) {
-        const textureBackground = scene.add.image(x, scene.scale.height, texture)
+        const textureBackground = scene.add.image(x, scene.scale.height + 180, texture)
         .setOrigin(0, 1)
         .setScrollFactor(scrollFactor);   
 
@@ -113,13 +113,13 @@ export default class GameScene extends Phaser.Scene
         repeatBackgroundAssets(this, totalWidth, MOUNTAIN, 0.25);
         repeatBackgroundAssets(this, totalWidth, PLATEAU, 0.50);
 
-        const ground = this.createGround(height, GROUND);
-        const grass = this.createGround(height - 90, GRASS);
+        const ground = this.createGround(height + 150, GROUND);
+        const grass = this.createGround(height + 60, GRASS);
         repeatBackgroundAssets(this, totalWidth, PLANTS, 1.25);
 
         this.scoreLabel = this.createScoreLabel(16, 16, 0).setScrollFactor(0);
 
-        this.add.image(25, height * 0.8, SIGN)
+        this.add.image(25, height - 10, SIGN)
                 .setOrigin(0, 1);
         
         this.platforms = this.createPlatforms();
@@ -133,7 +133,7 @@ export default class GameScene extends Phaser.Scene
 
         this.cameras.main.setBounds(0, 0, width * 2.8, height);
         this.cameras.main.startFollow(this.player, false, 0.1, 0.1);
-        this.physics.world.setBounds(0, -height * 0.2, width * 2.8, height);
+        this.physics.world.setBounds(0, 0, width * 2.8, height);
 
         
         //touch controls
@@ -159,6 +159,10 @@ export default class GameScene extends Phaser.Scene
                     .on ('pointerdown', () => { this.isPlayerJump = true })
                     .on('pointerup', () => { this.isPlayerJump = false; })
                     .setScrollFactor(0);
+
+            this.cameras.main.setBounds(0, 0, width * 10, height);
+            this.cameras.main.startFollow(this.player, false, 0.1, 0.1);
+            this.physics.world.setBounds(0, 0, width * 10, height);
         }
 
         this.startModal = this.scene.get('start-modal');
@@ -205,26 +209,30 @@ export default class GameScene extends Phaser.Scene
     }
 
     createPlatforms() {
-        const width = this.scale.width;
+        const initialX = 450;
         const height = this.scale.height;
 
         const platforms = this.physics.add.staticGroup();
         
-        platforms.create(450, height * 0.6, PLATFORM_LEFT);
-        platforms.create(578, height * 0.6, PLATFORM_MIDDLE);
-        platforms.create(706, height * 0.6, PLATFORM_RIGHT);
+        platforms.create(initialX, height * 0.79, PLATFORM_LEFT);
+        platforms.create(initialX + 128, height * 0.79, PLATFORM_MIDDLE);
+        platforms.create(initialX + 256, height * 0.79, PLATFORM_RIGHT);
 
-        platforms.create(920, height * 0.4, PLATFORM_LEFT);
-        platforms.create(1048, height * 0.4, PLATFORM_MIDDLE);
-        platforms.create(1176, height * 0.4, PLATFORM_RIGHT);
+        platforms.create(initialX * 2, height * 0.6, PLATFORM_LEFT);
+        platforms.create((initialX * 2) + 128, height * 0.6, PLATFORM_MIDDLE);
+        platforms.create((initialX * 2) + 256, height * 0.6, PLATFORM_RIGHT);
 
-        platforms.create(1390, height * 0.2, PLATFORM_LEFT);
-        platforms.create(1518, height * 0.2, PLATFORM_MIDDLE);
-        platforms.create(1646, height * 0.2, PLATFORM_RIGHT);
+        platforms.create((initialX * 3.5), height * 0.52, PLATFORM_LEFT);
+        platforms.create((initialX * 3.5) + 128, height * 0.52, PLATFORM_MIDDLE);
+        platforms.create((initialX * 3.5) + 256, height * 0.52, PLATFORM_RIGHT);
 
-        platforms.create(2000, height * 0.5, PLATFORM_LEFT);
-        platforms.create(2128, height * 0.5, PLATFORM_MIDDLE);
-        platforms.create(2256, height * 0.5, PLATFORM_RIGHT);
+        platforms.create(initialX * 4.8, height * 0.4, PLATFORM_LEFT);
+        platforms.create((initialX * 4.8) + 128, height * 0.4, PLATFORM_MIDDLE);
+        platforms.create((initialX * 4.8) + 256, height * 0.4, PLATFORM_RIGHT);
+
+        platforms.create(initialX * 6, height * 0.55, PLATFORM_LEFT);
+        platforms.create((initialX * 6) + 128, height * 0.55, PLATFORM_MIDDLE);
+        platforms.create((initialX * 6) + 256, height * 0.55, PLATFORM_RIGHT);
 
         return platforms;
     }
@@ -259,14 +267,14 @@ export default class GameScene extends Phaser.Scene
     }
 
     createBoxChallenges() {
-        let horizontalSpacing = 600;
+        let horizontalSpacing = 1000;
         const crate = this.physics.add.group();
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 3; i++) {
             let crateObject = this.physics.add.image(horizontalSpacing, 50, CRATE)
             crateObject.name = `CRATE_${i}`
             crate.add(crateObject);
 
-            horizontalSpacing += crateObject.width * 7;
+            horizontalSpacing += crateObject.width * 11;
         }
         
 
@@ -312,6 +320,8 @@ export default class GameScene extends Phaser.Scene
         this.cursors.left.reset();
         this.cursors.right.reset();
         this.cursors.up.reset();
+        this.isRunningToLeft = false;
+        this.isRunningToRight = false;
     }
 
     createScoreLabel(x, y, text) {
@@ -356,7 +366,7 @@ export default class GameScene extends Phaser.Scene
         const zoom = this.getZoom();
         const offset = 120 * zoom;
 
-        camera.setZoom(zoom);
+        camera.setZoom(0.85);
         camera.centerOn(1400 / 2, (1200 / 2) + 120);
     }
 
