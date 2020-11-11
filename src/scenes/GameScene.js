@@ -335,8 +335,12 @@ export default class GameScene extends Phaser.Scene
     }
 
     createScoreLabel(x, y, text, playerName) {
-        const style = { fontSize: '32px', fill: '#000' };
+        const panel = this.add.nineslice(x - 5, y - 5, 350, 50, 'panel2', 24).setScrollFactor(0);
+
+        const style = { fontSize: '38px', fill: '#000', fontStyle: 'bold' };
         const label = new ScoreLabel(this, x, y, text, playerName, style);
+
+        this.add.existing(panel);
         this.add.existing(label);
         return label;
     }
