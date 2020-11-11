@@ -38,7 +38,7 @@ export default class StartModal extends Phaser.Scene
     const buttonImage = new UiImage(this, width * 0.45, height * 0.65, BUTTON)
                             .setOrigin(0)
                             .setInteractive()
-                            .on('pointerdown', () => { this.startGame(); })
+                            .on('pointerdown', () => { this.showInputNameModal(); })
                             .on('pointerover', () => { buttonImage.setTint(0xfadcaa); })
                             .on('pointerout', () => { buttonImage.clearTint(); });
     
@@ -51,10 +51,8 @@ export default class StartModal extends Phaser.Scene
   
   }
 
-  update() { }
-
-  startGame() {
+  showInputNameModal() {
     this.scene.stop();
-    this.scene.resume('game-scene');
+    this.scene.start('input-name-modal');
   }
 }

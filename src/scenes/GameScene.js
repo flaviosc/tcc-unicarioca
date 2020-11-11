@@ -59,6 +59,7 @@ export default class GameScene extends Phaser.Scene
     /** @type {boolean} */
     isTouch; isRunningToLeft; isRunningToRight; isPlayerJump;
 
+    playerName;
 
 	constructor()
 	{
@@ -66,7 +67,6 @@ export default class GameScene extends Phaser.Scene
         this.platforms = undefined;
     }
     
-
 	preload()
     {
         this.load.image(SKY, 'assets/sky.png'); 
@@ -117,7 +117,7 @@ export default class GameScene extends Phaser.Scene
         const grass = this.createGround(height + 60, GRASS);
         repeatBackgroundAssets(this, totalWidth, PLANTS, 1.25);
 
-        this.scoreLabel = this.createScoreLabel(16, 16, 0).setScrollFactor(0);
+        // this.scoreLabel = this.createScoreLabel(16, 16, 0).setScrollFactor(0);
 
         this.add.image(25, height - 10, SIGN)
                 .setOrigin(0, 1);
@@ -165,9 +165,19 @@ export default class GameScene extends Phaser.Scene
             this.physics.world.setBounds(0, 0, width * 10, height);
         }
 
+        
         this.startModal = this.scene.get('start-modal');
         this.scene.launch('start-modal');
+
+        this.events.on('resume', (scene, data) => {
+            if(this.playerName == undefined) {
+                this.playerName = data.playerName;
+                this.scoreLabel = this.createScoreLabel(16, 16, 0, this.playerName).setScrollFactor(0);
+            }
+        })
+
         this.scene.pause();
+        
     }
 
     update() {
@@ -324,9 +334,9 @@ export default class GameScene extends Phaser.Scene
         this.isRunningToRight = false;
     }
 
-    createScoreLabel(x, y, text) {
+    createScoreLabel(x, y, text, playerName) {
         const style = { fontSize: '32px', fill: '#000' };
-        const label = new ScoreLabel(this, x, y, text, style);
+        const label = new ScoreLabel(this, x, y, text, playerName, style);
         this.add.existing(label);
         return label;
     }

@@ -1,10 +1,12 @@
 import Phaser, { Game } from 'phaser';
 import { Plugin as NineSlicePlugin } from 'phaser3-nineslice';
+import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin';
 
 import CorrectAnswerScene from './scenes/CorrectAnswerScene';
 import FirstChallengeScene from './scenes/FirstChallengeScene';
 import GameScene from './scenes/GameScene';
 import StartModal from './scenes/StartModal';
+import InputNameModal from './scenes/InputNameModal';
 
 
 const config = {
@@ -21,10 +23,18 @@ const config = {
 			gravity: { y: 200 }
 		}
 	},
+	dom: {
+		createContainer: true
+	},
 	plugins: {
+        scene: [{
+            key: 'rexUI',
+            plugin: RexUIPlugin,
+            mapping: 'rexUI'
+        }],
 		global: [ NineSlicePlugin.DefaultCfg ],
 	},
-	scene: [GameScene, StartModal, FirstChallengeScene, CorrectAnswerScene]
+	scene: [GameScene, StartModal, InputNameModal, FirstChallengeScene, CorrectAnswerScene]
 }
 
 export default new Phaser.Game(config)
