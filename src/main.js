@@ -1,6 +1,7 @@
 import Phaser, { Game } from 'phaser';
 import { Plugin as NineSlicePlugin } from 'phaser3-nineslice';
 import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin';
+import InputTextPlugin from 'phaser3-rex-plugins/plugins/inputtext-plugin.js';
 
 import CorrectAnswerScene from './scenes/CorrectAnswerScene';
 import FirstChallengeScene from './scenes/FirstChallengeScene';
@@ -32,7 +33,14 @@ const config = {
             plugin: RexUIPlugin,
             mapping: 'rexUI'
         }],
-		global: [ NineSlicePlugin.DefaultCfg ],
+		global: [ 
+			NineSlicePlugin.DefaultCfg,
+			{
+				key: 'rexInputTextPlugin',
+				plugin: InputTextPlugin,
+				start: true
+			},
+		],
 	},
 	scene: [GameScene, StartModal, InputNameModal, FirstChallengeScene, CorrectAnswerScene]
 }
