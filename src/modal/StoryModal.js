@@ -12,9 +12,14 @@ const THIRD_LABEL =
 
 export default class StoryModal extends Phaser.Scene {
     playerName;
+    characterSelected;
 
     constructor() {
         super('story-modal');
+    }
+
+    init(data) {
+        this.characterSelected = data.characterSelected;
     }
 
     preload() {
@@ -31,7 +36,7 @@ export default class StoryModal extends Phaser.Scene {
         const labelTextTitle = new TextLabel(this, width * 0.23, height * 0.1, FIRST_LABEL, { fontFamily: 'Comic Sans MS', fontSize: '38px', fill: '#000', align: 'center', padding: 10, wordWrap: { width: 750 } }).setOrigin(0,0);
         const labelTextBody = new TextLabel(this, width * 0.40, height * 0.3, SECOND_LABEL, { fontFamily: 'Comic Sans MS', fontSize: '30px', fill: '#000', align: 'right', padding: 10, wordWrap: { width: 550 }}).setOrigin(0,0)
 
-        const characterImage = new UiImage(this, width * 0.30, height * 0.35, 'girlplayer')
+        const characterImage = new UiImage(this, width * 0.30, height * 0.35, this.characterSelected)
                             .setOrigin(0)
                             .setSize(500, 200);
 

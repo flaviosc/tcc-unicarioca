@@ -31,9 +31,18 @@ export default class StartModal extends Phaser.Scene
 
     const homeText = new TextLabel(this, width * 0.38, height * 0.2, 'Aventuras e Sentimentos', { fontFamily: 'Comic Sans MS', fontSize: '38px', fill: '#000', align: 'center', padding: 10 })
 
-    const characterImage = new UiImage(this, width * 0.48, height * 0.35, 'girlplayer')
+    const girlPlayer = new UiImage(this, width * 0.40, height * 0.35, 'girlplayer')
                             .setOrigin(0)
                             .setSize(500, 200);
+
+    const boyPlayer = new UiImage(this, width * 0.50, height * 0.35, 'boyplayer')
+                            .setOrigin(0)
+                            .setSize(500, 200);
+
+    const crate = new UiImage(this, width * 0.60, height * 0.39, 'crate')
+                            .setOrigin(0)
+                            .setSize(500, 200);
+
 
     const buttonImage = new UiImage(this, width * 0.45, height * 0.65, BUTTON)
                             .setOrigin(0)
@@ -47,7 +56,9 @@ export default class StartModal extends Phaser.Scene
     this.add.existing(panel);
     this.add.existing(homeText);
     this.add.existing(buttonImage);
-    this.add.existing(characterImage);
+    this.add.existing(girlPlayer);
+    this.add.existing(boyPlayer);
+    this.add.existing(crate);
     this.add.existing(buttonText);
   
   }

@@ -7,10 +7,10 @@ const INCORRECTANSWERTEXT =
 Como você acha que ele está se sentindo?`;
 
 
-export default class IncorrectAnswerScene extends Phaser.Scene {
+export default class IncorrectAnswerModal extends Phaser.Scene {
 
     constructor() {
-        super('incorrect-answer-scene');
+        super('incorrect-answer-modal');
     }
 
     

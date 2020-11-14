@@ -3,13 +3,14 @@ import { Plugin as NineSlicePlugin } from 'phaser3-nineslice';
 import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin';
 import InputTextPlugin from 'phaser3-rex-plugins/plugins/inputtext-plugin.js';
 
-import CorrectAnswerScene from './scenes/CorrectAnswerScene';
-import FirstChallengeScene from './scenes/FirstChallengeScene';
+import CorrectAnswerModal from './modal/CorrectAnswerModal';
+import ChallengeScene from './scenes/ChallengeScene';
 import GameScene from './scenes/GameScene';
-import StartModal from './scenes/StartModal';
-import InputNameModal from './scenes/InputNameModal';
-import FirstQuestionModal from './scenes/FirstQuestionModal';
-import StoryModal from './scenes/StoryModal';
+import StartModal from './modal/StartModal';
+import InputNameModal from './modal/InputNameModal';
+import FirstQuestionModal from './modal/FirstQuestionModal';
+import StoryModal from './modal/StoryModal';
+import CharacterSelectModal from './modal/CharacterSelectModal';
 
 const config = {
 	type: Phaser.AUTO,
@@ -47,10 +48,11 @@ const config = {
 		GameScene,
 		StartModal,
 		InputNameModal,
+		CharacterSelectModal,
 		FirstQuestionModal,
 		StoryModal,
-		FirstChallengeScene,
-		CorrectAnswerScene,
+		ChallengeScene,
+		CorrectAnswerModal,
 	]
 }
 

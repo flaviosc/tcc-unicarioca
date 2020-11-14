@@ -16,13 +16,13 @@ const BUTTONLEFTTEXT = 'Feliz';
 const BUTTONMIDDLETEXT = 'Triste';
 const BUTTONRIGHTTEXT = 'Com raiva';
 
-export default class FirstChallengeScene extends Phaser.Scene {
+export default class ChallengeScene extends Phaser.Scene {
 
     /** @type {Phaser.GameObjects.Container} */
     container;
 
     constructor() {
-        super('first-challenge-scene');
+        super('challenge-scene');
         this.contentText = undefined;
     }
 
@@ -109,8 +109,8 @@ export default class FirstChallengeScene extends Phaser.Scene {
 
     checkAnswer(isCorrect, button) {
         if(isCorrect == true) {
-            const successScene = this.scene.get('correct-answer-scene');
-            this.scene.launch('correct-answer-scene');
+            const successScene = this.scene.get('correct-answer-modal');
+            this.scene.launch('correct-answer-modal');
             this.scene.pause();
 
         } else {

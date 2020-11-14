@@ -24,6 +24,7 @@ const ARROW_RIGHT = 'arrowright';
 const BUTTON_JUMP = 'buttonjump';
 
 const GIRL_PLAYER = 'girlplayer';
+const BOY_PLAYER = 'boyplayer';
 
 /**
  * 
@@ -87,7 +88,8 @@ export default class GameScene extends Phaser.Scene
         this.load.image(ARROW_RIGHT, 'assets/arrow_right.png');
         this.load.image(BUTTON_JUMP, 'assets/button_jump.png');
 
-        this.load.spritesheet('girlplayer', 'assets/female_tilesheet.png', { frameWidth: 80, frameHeight: 111 });
+        this.load.spritesheet(GIRL_PLAYER, 'assets/female_tilesheet.png', { frameWidth: 80, frameHeight: 111 });
+        this.load.spritesheet(BOY_PLAYER, 'assets/player_tilesheet.png', { frameWidth: 80, frameHeight: 111 });
 
         this.cursors = this.input.keyboard.createCursorKeys();
     }
@@ -117,22 +119,17 @@ export default class GameScene extends Phaser.Scene
         const grass = this.createGround(height + 60, GRASS);
         repeatBackgroundAssets(this, totalWidth, PLANTS, 1.25);
 
-        // this.scoreLabel = this.createScoreLabel(16, 16, 0).setScrollFactor(0);
 
         this.add.image(25, height - 10, SIGN)
                 .setOrigin(0, 1);
         
         this.platforms = this.createPlatforms();
-        this.player = this.createPlayer();
+        
         this.challenges = this.createBoxChallenges();
-        this.physics.add.collider(this.player, ground);
-        this.physics.add.collider(this.player, this.platforms);
         this.physics.add.collider(this.challenges, this.platforms);
         this.physics.add.collider(this.challenges, ground);
-        this.physics.add.overlap(this.player, this.challenges, this.collectBox, null, this);
 
         this.cameras.main.setBounds(0, 0, width * 2.8, height);
-        this.cameras.main.startFollow(this.player, false, 0.1, 0.1);
         this.physics.world.setBounds(0, 0, width * 2.8, height);
 
         
@@ -170,11 +167,21 @@ export default class GameScene extends Phaser.Scene
         this.scene.launch('start-modal');
 
         this.events.on('resume', (scene, data) => {
-            if(this.playerName == undefined && data.scene === 'first-question') {
+            if(data.scene === 'character-select') {
+                this.player = this.createPlayer(data.characterSelected);
+                this.physics.add.collider(this.player, ground);
+                this.physics.add.collider(this.player, this.platforms);
+                this.physics.add.overlap(this.player, this.challenges, this.collectBox, null, this);
+                this.cameras.main.startFollow(this.player, false, 0.1, 0.1);
+                this.showStoryModal(data.characterSelected);
+            }
+
+            if(this.playerName == undefined && data.scene === 'character-select') {
                 this.playerName = data.playerName;
                 this.scoreLabel = this.createScoreLabel(16, 16, 0, this.playerName).setScrollFactor(0);
-                this.showStoryModal();
             }
+
+            this.resetCursors();
         });
 
         this.scene.pause();
@@ -182,23 +189,20 @@ export default class GameScene extends Phaser.Scene
     }
 
     update() {
-        var cursors = this.cursors;
-        var player = this.player;
-
-        if(cursors.left.isDown || this.isRunningToLeft){
+        if(this.cursors.left.isDown || this.isRunningToLeft){
             this.player.setVelocityX(-300);
             this.player.anims.play('left', true);
             this.player.setFlipX(true);
         } else if (this.cursors.right.isDown || this.isRunningToRight) {
-            player.setVelocityX(300);
-            player.anims.play('right', true);
-            player.setFlipX(false);
+            this.player.setVelocityX(300);
+            this.player.anims.play('right', true);
+            this.player.setFlipX(false);
         } else {
-            player.setVelocityX(0);
-            player.anims.play('turn');
+            this.player.setVelocityX(0);
+            this.player.anims.play('turn');
         } 
 
-        if(cursors.up.isDown || this.isPlayerJump) {
+        if(this.cursors.up.isDown || this.isPlayerJump) {
             this.startJump();
         }
     }
@@ -251,28 +255,29 @@ export default class GameScene extends Phaser.Scene
         return platforms;
     }
 
-    createPlayer() {
-        const player = this.physics.add.sprite(110, 451, GIRL_PLAYER);
+    createPlayer(characterSelected) {
+        console.log(characterSelected);
+        const player = this.physics.add.sprite(110, 451, characterSelected);
         player.setBounce(0.2);
         player.setCollideWorldBounds(true);
     
         this.anims.create({
             key: 'left',
-            frames: this.anims.generateFrameNumbers(GIRL_PLAYER, {frames: [ 0, 1 ]}),
+            frames: this.anims.generateFrameNumbers(characterSelected, {frames: [ 0, 1 ]}),
             frameRate: 5,
             repeat: -1
         });
     
        this.anims.create({
             key: 'turn',
-            frames: [{ key: GIRL_PLAYER, frame: 23 }],
+            frames: [{ key: characterSelected, frame: 23 }],
             frameRate: 20
        })
         
        
        this.anims.create({
          key: 'right',
-         frames: this.anims.generateFrameNumbers(GIRL_PLAYER, {frames: [ 0, 1 ]}),
+         frames: this.anims.generateFrameNumbers(characterSelected, {frames: [ 0, 1 ]}),
          frameRate: 5,
          repeat: -1
        })
@@ -308,8 +313,8 @@ export default class GameScene extends Phaser.Scene
        let challangeScene;
        switch (boxName) {
            case 'CRATE_0':
-               challangeScene = this.scene.get('first-challenge-scene');
-               this.scene.launch('first-challenge-scene');
+               challangeScene = this.scene.get('challenge-scene');
+               this.scene.launch('challenge-scene');
                this.scene.pause();
             break;
 
@@ -364,12 +369,12 @@ export default class GameScene extends Phaser.Scene
         }
     }
 
-    showStoryModal() {
+    showStoryModal(character) {
         setTimeout(() => {
             this.scene.pause();
             this.storyModal = this.scene.get('story-modal');
-            this.scene.launch('story-modal');
-        }, 2500);
+            this.scene.launch('story-modal', { characterSelected: character });
+        }, 1700);
     }
 
     resize (gameSize) {

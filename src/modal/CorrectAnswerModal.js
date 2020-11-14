@@ -9,7 +9,7 @@ const BUTTONTEXT = `Continuar`;
 
 const SCENE_POINTS = 100;
 
-export default class CorrectAnswerScene extends Phaser.Scene {
+export default class CorrectAnswerModal extends Phaser.Scene {
 
     /** @type {Phaser.GameObjects.Container} */
     container;
@@ -18,13 +18,12 @@ export default class CorrectAnswerScene extends Phaser.Scene {
     successText;
 
     constructor() {
-        super('correct-answer-scene');
+        super('correct-answer-modal');
         this.container = undefined;
         this.successText = undefined;
     }
 
     create() {
-        console.log('criei');
         const width = this.scale.width;
         const height = this.scale.height;
 
@@ -56,10 +55,10 @@ export default class CorrectAnswerScene extends Phaser.Scene {
     }
 
     returnToGameScene() {
-        this.scene.stop('first-challenge-scene');
+        this.scene.stop('challenge-scene');
         this.scene.stop();
         const gameScene = this.scene.get('game-scene');
-        this.scene.resume('game-scene');
+        this.scene.resume('game-scene', { scene: 'correct-answer' });
         gameScene.resetCursors();
         gameScene.updateScore(SCENE_POINTS);
     }

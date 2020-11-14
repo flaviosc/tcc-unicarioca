@@ -55,6 +55,6 @@ export default class FirstQuestionModal extends Phaser.Scene {
 
     startGame() {
         this.scene.stop();
-        this.scene.resume('game-scene', { scene: 'first-question', playerName: this.playerName });
+        this.scene.start('character-select-modal', { scene: 'first-question', playerName: this.playerName });
     }
 }
