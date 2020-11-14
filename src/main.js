@@ -8,7 +8,8 @@ import FirstChallengeScene from './scenes/FirstChallengeScene';
 import GameScene from './scenes/GameScene';
 import StartModal from './scenes/StartModal';
 import InputNameModal from './scenes/InputNameModal';
-
+import FirstQuestionModal from './scenes/FirstQuestionModal';
+import StoryModal from './scenes/StoryModal';
 
 const config = {
 	type: Phaser.AUTO,
@@ -42,7 +43,15 @@ const config = {
 			},
 		],
 	},
-	scene: [GameScene, StartModal, InputNameModal, FirstChallengeScene, CorrectAnswerScene]
+	scene: [
+		GameScene,
+		StartModal,
+		InputNameModal,
+		FirstQuestionModal,
+		StoryModal,
+		FirstChallengeScene,
+		CorrectAnswerScene,
+	]
 }
 
 export default new Phaser.Game(config)

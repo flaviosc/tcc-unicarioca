@@ -44,6 +44,7 @@ export default class StartModal extends Phaser.Scene
     
     const buttonText = new TextLabel(this, width * 0.49, height * 0.65, 'Jogar', { fontFamily: 'Comic Sans MS', fontSize: '18px', fill: '#000', align: 'right', padding: 10 })
 
+    this.add.existing(panel);
     this.add.existing(homeText);
     this.add.existing(buttonImage);
     this.add.existing(characterImage);

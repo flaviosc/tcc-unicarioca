@@ -170,31 +170,35 @@ export default class GameScene extends Phaser.Scene
         this.scene.launch('start-modal');
 
         this.events.on('resume', (scene, data) => {
-            if(this.playerName == undefined) {
+            if(this.playerName == undefined && data.scene === 'first-question') {
                 this.playerName = data.playerName;
                 this.scoreLabel = this.createScoreLabel(16, 16, 0, this.playerName).setScrollFactor(0);
+                this.showStoryModal();
             }
-        })
+        });
 
         this.scene.pause();
         
     }
 
     update() {
-        if(this.cursors.left.isDown || this.isRunningToLeft){
+        var cursors = this.cursors;
+        var player = this.player;
+
+        if(cursors.left.isDown || this.isRunningToLeft){
             this.player.setVelocityX(-300);
             this.player.anims.play('left', true);
             this.player.setFlipX(true);
         } else if (this.cursors.right.isDown || this.isRunningToRight) {
-            this.player.setVelocityX(300);
-            this.player.anims.play('right', true);
-            this.player.setFlipX(false);
+            player.setVelocityX(300);
+            player.anims.play('right', true);
+            player.setFlipX(false);
         } else {
-            this.player.setVelocityX(0);
-            this.player.anims.play('turn');
+            player.setVelocityX(0);
+            player.anims.play('turn');
         } 
 
-        if(this.cursors.up.isDown || this.isPlayerJump) {
+        if(cursors.up.isDown || this.isPlayerJump) {
             this.startJump();
         }
     }
@@ -358,6 +362,14 @@ export default class GameScene extends Phaser.Scene
             console.log("mobile");
             this.isTouch = true;
         }
+    }
+
+    showStoryModal() {
+        setTimeout(() => {
+            this.scene.pause();
+            this.storyModal = this.scene.get('story-modal');
+            this.scene.launch('story-modal');
+        }, 2500);
     }
 
     resize (gameSize) {

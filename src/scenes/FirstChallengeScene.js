@@ -94,7 +94,7 @@ export default class FirstChallengeScene extends Phaser.Scene {
     }
 
     createContentText(x, y, text) {
-        const style = { fontFamily: 'Comic Sans MS', fontSize: '23px', fill: '#000', align: 'center', padding: 10 };
+        const style = { fontFamily: 'Comic Sans MS', fontSize: '23px', fill: '#000', align: 'center', padding: 10, wordWrap: { width: 450 } };
         const label = new TextLabel(this, x, y, text, style);
         this.add.existing(label);
         return label;
