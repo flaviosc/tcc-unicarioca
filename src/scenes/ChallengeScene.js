@@ -28,9 +28,6 @@ export default class ChallengeScene extends Phaser.Scene {
 
     preload() {
         this.load.image(SAD_CHILDREN_KEY, 'assets/sad_children.png');
-        this.load.image(SAD_EMOTION_KEY, 'assets/sad.png');
-        this.load.image(HAPPY_EMOTION_KEY, 'assets/happy.png');
-        this.load.image(ANGRY_EMOTION_KEY, 'assets/angry.png');
     }
 
     create() {

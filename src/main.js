@@ -8,7 +8,7 @@ import ChallengeScene from './scenes/ChallengeScene';
 import GameScene from './scenes/GameScene';
 import StartModal from './modal/StartModal';
 import InputNameModal from './modal/InputNameModal';
-import FirstQuestionModal from './modal/FirstQuestionModal';
+import MoodQuestionModal from './modal/MoodQuestionModal';
 import StoryModal from './modal/StoryModal';
 import CharacterSelectModal from './modal/CharacterSelectModal';
 
@@ -49,7 +49,7 @@ const config = {
 		StartModal,
 		InputNameModal,
 		CharacterSelectModal,
-		FirstQuestionModal,
+		MoodQuestionModal,
 		StoryModal,
 		ChallengeScene,
 		CorrectAnswerModal,
