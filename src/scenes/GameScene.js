@@ -54,18 +54,26 @@ export default class GameScene extends Phaser.Scene
     /** @type {Phaser.Physics.Arcade.StaticGroup} */
     platforms;
 
-    /** @type {Phaser.Scene} */
-    firstChallenge;
-
     /** @type {boolean} */
     isTouch; isRunningToLeft; isRunningToRight; isPlayerJump;
 
+    /** @type {string} */
     playerName;
+
+    groupOneChallenges;
+    groupTwoChallenges;
+    groupThreeChallenges;
+
+    /** @type {number} */
+    gameLevel = 1;
 
 	constructor()
 	{
         super('game-scene');
         this.platforms = undefined;
+        this.countLevelOneChallenges = 0;
+        this.countLevelTwoChallenges = 0;
+        this.countLevelThreeChallenges = 0;
     }
     
 	preload()
@@ -115,7 +123,7 @@ export default class GameScene extends Phaser.Scene
         repeatBackgroundAssets(this, totalWidth, MOUNTAIN, 0.25);
         repeatBackgroundAssets(this, totalWidth, PLATEAU, 0.50);
 
-        const ground = this.createGround(height + 150, GROUND);
+        this.ground = this.createGround(height + 150, GROUND);
         const grass = this.createGround(height + 60, GRASS);
         repeatBackgroundAssets(this, totalWidth, PLANTS, 1.25);
 
@@ -125,42 +133,12 @@ export default class GameScene extends Phaser.Scene
         
         this.platforms = this.createPlatforms();
         
-        this.challenges = this.createBoxChallenges();
-        this.physics.add.collider(this.challenges, this.platforms);
-        this.physics.add.collider(this.challenges, ground);
+        this.groupOneChallenges = this.createBoxChallenges(600, 0);
+        this.physics.add.collider(this.groupOneChallenges, this.platforms);
+        this.physics.add.collider(this.groupOneChallenges, this.ground);
 
-        this.cameras.main.setBounds(0, 0, width * 2.8, height);
-        this.physics.world.setBounds(0, 0, width * 2.8, height);
-
-        
-        //touch controls
-        this.checkDevice();
-        if(this.isTouch == true) {
-            const pointer1 = this.input.addPointer();
-            const pointer2 = this.input.addPointer();
-
-            const arrowLeft = this.add.nineslice(width * 0.1, height * 0.82, 40, 50, ARROW_LEFT, 0)
-                    .setInteractive()
-                    .on('pointerdown', () => { this.isRunningToLeft = true; })
-                    .on('pointerup', () => { this.isRunningToLeft = false })
-                    .setScrollFactor(0);
-            
-            const arrowRight = this.add.nineslice(width * 0.3, height * 0.82, 40, 50, ARROW_RIGHT, 0)
-                    .setInteractive()
-                    .on ('pointerdown', () => { this.isRunningToRight = true })
-                    .on('pointerup', () => { this.isRunningToRight = false; })
-                    .setScrollFactor(0);
-
-            const buttonJump = this.add.nineslice(width * 0.8, height * 0.82, 40, 50, BUTTON_JUMP, 0)
-                    .setInteractive()
-                    .on ('pointerdown', () => { this.isPlayerJump = true })
-                    .on('pointerup', () => { this.isPlayerJump = false; })
-                    .setScrollFactor(0);
-
-            this.cameras.main.setBounds(0, 0, width * 10, height);
-            this.cameras.main.startFollow(this.player, false, 0.1, 0.1);
-            this.physics.world.setBounds(0, 0, width * 10, height);
-        }
+        this.cameras.main.setBounds(0, 0, width * 10, height);
+        this.physics.world.setBounds(0, 0, width * 10, height);
 
         
         this.startModal = this.scene.get('start-modal');
@@ -169,9 +147,9 @@ export default class GameScene extends Phaser.Scene
         this.events.on('resume', (scene, data) => {
             if(data.scene === 'character-select') {
                 this.player = this.createPlayer(data.characterSelected);
-                this.physics.add.collider(this.player, ground);
+                this.physics.add.collider(this.player, this.ground);
                 this.physics.add.collider(this.player, this.platforms);
-                this.physics.add.overlap(this.player, this.challenges, this.collectBox, null, this);
+                this.physics.add.overlap(this.player, this.groupOneChallenges, this.collectBox, null, this);
                 this.cameras.main.startFollow(this.player, false, 0.1, 0.1);
                 this.showStoryModal(data.characterSelected);
             }
@@ -183,6 +161,34 @@ export default class GameScene extends Phaser.Scene
 
             this.resetCursors();
         });
+
+        //touch controls
+        this.checkDevice();
+        if(this.isTouch == true) {
+            const pointer1 = this.input.addPointer();
+            const pointer2 = this.input.addPointer();
+
+            const arrowLeft = this.add.nineslice(0, height * 0.90, 40, 50, ARROW_LEFT, 0)
+                    .setInteractive()
+                    .on('pointerdown', () => { this.isRunningToLeft = true; })
+                    .on('pointerup', () => { this.isRunningToLeft = false })
+                    .setScrollFactor(0);
+            
+            const arrowRight = this.add.nineslice(width * 0.2, height * 0.90, 40, 50, ARROW_RIGHT, 0)
+                    .setInteractive()
+                    .on ('pointerdown', () => { this.isRunningToRight = true })
+                    .on('pointerup', () => { this.isRunningToRight = false; })
+                    .setScrollFactor(0);
+
+            const buttonJump = this.add.nineslice(width * 0.8, height * 0.90, 40, 50, BUTTON_JUMP, 0)
+                    .setInteractive()
+                    .on ('pointerdown', () => { this.isPlayerJump = true })
+                    .on('pointerup', () => { this.isPlayerJump = false; })
+                    .setScrollFactor(0);
+
+            this.cameras.main.setBounds(0, 0, width * 10, height);
+            this.physics.world.setBounds(0, 0, width * 10, height);
+        }
 
         this.scene.pause();
         
@@ -214,13 +220,13 @@ export default class GameScene extends Phaser.Scene
     }
 
     createGround(height, key) {
-        let groundWidth = 450;
+        let groundWidth = 0;
         const ground = this.physics.add.staticGroup().setOrigin(0, 0);
         
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 10; i++) {
             ground.create(groundWidth, height - 80, key);
             
-            groundWidth += groundWidth;
+            groundWidth += 1920;
         }        
 
         return ground;
@@ -285,15 +291,14 @@ export default class GameScene extends Phaser.Scene
        return player;
     }
 
-    createBoxChallenges() {
-        let horizontalSpacing = 1000;
+    createBoxChallenges(horizontalSpacing, index) {
         const crate = this.physics.add.group();
-        for (let i = 0; i < 3; i++) {
+        for (let i = index; i < index+3; i++) {
             let crateObject = this.physics.add.image(horizontalSpacing, 50, CRATE)
             crateObject.name = `CRATE_${i}`
             crate.add(crateObject);
 
-            horizontalSpacing += crateObject.width * 11;
+            horizontalSpacing += crateObject.width * 8;
         }
         
 
@@ -306,33 +311,13 @@ export default class GameScene extends Phaser.Scene
 
     collectBox (player, box) {
         box.disableBody(true, true);
-        this.showChallangeScene(box.name);
+        this.showChallangeScene(box);
     }
 
-    showChallangeScene(boxName) {
-       let challangeScene;
-       switch (boxName) {
-           case 'CRATE_0':
-               challangeScene = this.scene.get('challenge-scene');
-               this.scene.launch('challenge-scene');
-               this.scene.pause();
-            break;
-
-            case 'CRATE_1':
-               
-            break;
-
-            case 'CRATE_2':
-               
-            break;
-
-            case 'CRATE_3':
-               
-            break;
-       
-           default:
-               break;
-       }
+    showChallangeScene(box) {
+       let challangeScene = this.scene.get('challenge-modal');
+       this.scene.launch('challenge-modal', { gameLevel: this.gameLevel, challengeId: box.name });
+       this.scene.pause();
     }
 
     resetCursors() {
@@ -375,6 +360,31 @@ export default class GameScene extends Phaser.Scene
             this.storyModal = this.scene.get('story-modal');
             this.scene.launch('story-modal', { characterSelected: character });
         }, 1700);
+    }  
+
+    
+    checkLevelGame() {
+        if(this.groupOneChallenges && this.groupTwoChallenges && this.groupThreeChallenges) {
+            return;
+        }
+
+        if(this.groupTwoChallenges == undefined && this.groupOneChallenges.countActive(true) === 0) {
+            this.gameLevel = 2;
+
+            this.groupTwoChallenges = this.createBoxChallenges(this.player.x + 400, 3);
+            this.physics.add.collider(this.groupTwoChallenges, this.platforms);
+            this.physics.add.collider(this.groupTwoChallenges, this.ground);
+            this.physics.add.overlap(this.player, this.groupTwoChallenges, this.collectBox, null, this);
+        }
+
+        if(this.groupTwoChallenges != undefined && this.groupTwoChallenges.countActive(true) === 0) {
+            this.gameLevel = 3;
+
+            this.groupThreeChallenges = this.createBoxChallenges(this.player.x + 400, 6);
+            this.physics.add.collider(this.groupThreeChallenges, this.platforms);
+            this.physics.add.collider(this.groupThreeChallenges, this.ground);
+            this.physics.add.overlap(this.player, this.groupThreeChallenges, this.collectBox, null, this);
+        }
     }
 
     resize (gameSize) {

@@ -4,7 +4,7 @@ import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin';
 import InputTextPlugin from 'phaser3-rex-plugins/plugins/inputtext-plugin.js';
 
 import CorrectAnswerModal from './modal/CorrectAnswerModal';
-import ChallengeScene from './scenes/ChallengeScene';
+import ChallengeModal from './modal/ChallengeModal';
 import GameScene from './scenes/GameScene';
 import StartModal from './modal/StartModal';
 import InputNameModal from './modal/InputNameModal';
@@ -51,7 +51,7 @@ const config = {
 		CharacterSelectModal,
 		MoodQuestionModal,
 		StoryModal,
-		ChallengeScene,
+		ChallengeModal,
 		CorrectAnswerModal,
 	]
 }

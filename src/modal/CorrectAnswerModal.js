@@ -55,11 +55,12 @@ export default class CorrectAnswerModal extends Phaser.Scene {
     }
 
     returnToGameScene() {
-        this.scene.stop('challenge-scene');
+        this.scene.stop('challenge-modal');
         this.scene.stop();
         const gameScene = this.scene.get('game-scene');
         this.scene.resume('game-scene', { scene: 'correct-answer' });
         gameScene.resetCursors();
+        gameScene.checkLevelGame();
         gameScene.updateScore(SCENE_POINTS);
     }
 }
