@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 
 import TextLabel from '../ui/TextLabel';
 
-const PANEL_DIALOG = 'panel1';
+const PANEL = 'panel1';
 
 const BUTTON_KEY = 'button';
 const SAD_CHILDREN_KEY = 'sadchildren';
@@ -14,14 +14,24 @@ const CHALLENGETEXT =
 `O nosso amiguinho da foto não parece estar muito bem...
 Como você acha que ele está se sentindo?`;
 
+const POSITIVEFEEDBACK1 = 
+`Realmente, o nosso amiguinho está bem triste...
+`;
+
+const NEGATIVEFEEDBACK1 =
+`Repare novamente no nosso amiguinho. 
+ Ele realmente está feliz?
+`;
+
+const NEGATIVEFEEDBACK2 = 
+`Já vi outros amiguinhos com raiva, e esse nosso amiguinho não parece estar assim...  
+ Tem certeza que ele está com raiva?
+`;
+
 const BUTTONLEFTTEXT = 'Feliz';
 const BUTTONMIDDLETEXT = 'Triste';
 const BUTTONRIGHTTEXT = 'Com raiva';
 
-
-const HEADER_LABEL = 'Escolha e clique em um dos personagens abaixo:';
-const GIRL_PLAYER = 'girlplayer';
-const BOY_PLAYER = 'boyplayer';
 
 export default class ChallengeModal extends Phaser.Scene {
 
@@ -33,6 +43,12 @@ export default class ChallengeModal extends Phaser.Scene {
 
     /** @type {number} */
     gameLevel;
+
+    /** @type {string} */
+    positiveFeedbackText;
+
+    /** @type {string} */
+    negativeFeedbackText;
 
     constructor() {
         super('challenge-modal');
@@ -51,6 +67,11 @@ export default class ChallengeModal extends Phaser.Scene {
     create() {
         const width = this.scale.width;
         const height = this.scale.height;
+
+        this.container = this.add.container(width * 0.5, height * 0.5);
+        const panel = this.add.nineslice(0, -10 , width * 0.8, height * 0.8, PANEL, 24).setOrigin(0.5);        
+        this.container.add(panel);
+
         this.loadModalBody(width, height);
 
     }
@@ -99,10 +120,6 @@ export default class ChallengeModal extends Phaser.Scene {
     }
 
     showChallengeOne(width, height) {
-        const container = this.add.container(width * 0.5, height * 0.5);
-        const panel = this.add.nineslice(0, -10 , width * 0.8, height * 0.8, 'panel1', 24).setOrigin(0.5);        
-
-        
         const children = this.add.nineslice(0, -height * 0.25, 150, 200, SAD_CHILDREN_KEY, 24).setOrigin(0.5);    
         this.contentText = this.createContentText(0, 20, width, CHALLENGETEXT).setOrigin(0.5);    
 
@@ -118,32 +135,31 @@ export default class ChallengeModal extends Phaser.Scene {
         const btnRightText = this.createButtonText(180, 150, BUTTONRIGHTTEXT).setOrigin(0.5);
         const btnRightIcon = this.add.nineslice(260, 150, 25, 25, ANGRY_EMOTION_KEY, 0).setOrigin(0.5);    
 
-        container.add(panel);
-        container.add(children);
-        container.add(this.contentText);
+        this.container.add(children);
+        this.container.add(this.contentText);
 
-        container.add(buttonLeft);
-        container.add(btnLeftText);
-        container.add(btnLeftIcon);
+        this.container.add(buttonLeft);
+        this.container.add(btnLeftText);
+        this.container.add(btnLeftIcon);
 
-        container.add(buttonMiddle);
-        container.add(btnMiddleText);
-        container.add(btnMiddleIcon);
+        this.container.add(buttonMiddle);
+        this.container.add(btnMiddleText);
+        this.container.add(btnMiddleIcon);
 
-        container.add(buttonRight);
-        container.add(btnRightText);
-        container.add(btnRightIcon);
+        this.container.add(buttonRight);
+        this.container.add(btnRightText);
+        this.container.add(btnRightIcon);
 
         buttonLeft.setInteractive()
-                  .on('pointerdown', () => { this.checkAnswer(false, buttonLeft); buttonLeft.setTint(0xff0000)})
+                  .on('pointerdown', () => { this.negativeFeedbackText = NEGATIVEFEEDBACK1, this.checkAnswer(false, buttonLeft); buttonLeft.setTint(0xff0000)})
                   .on('pointerover', () => { buttonLeft.setTint(0xfadcaa); })
                   .on('pointerout', () => { buttonLeft.clearTint(); })
         buttonMiddle.setInteractive()
-                    .on('pointerdown', () => { this.checkAnswer(true, buttonMiddle); buttonMiddle.setTint(0xff00) })
+                    .on('pointerdown', () => { this.positiveFeedbackText = POSITIVEFEEDBACK1, this.checkAnswer(true, buttonMiddle); buttonMiddle.setTint(0xff00) })
                     .on('pointerover', () => { buttonMiddle.setTint(0xfadcaa); })
                     .on('pointerout', () => { buttonMiddle.clearTint(); })
         buttonRight.setInteractive()
-                   .on('pointerdown', () => { this.checkAnswer(false, buttonRight); buttonRight.setTint(0xff0000) })
+                   .on('pointerdown', () => { this.negativeFeedbackText = NEGATIVEFEEDBACK2, this.checkAnswer(false, buttonRight); buttonRight.setTint(0xff0000) })
                    .on('pointerover', () => { buttonRight.setTint(0xfadcaa); })
                    .on('pointerout', () => { buttonRight.clearTint(); })
     }
@@ -170,12 +186,12 @@ export default class ChallengeModal extends Phaser.Scene {
     checkAnswer(isCorrect, button) {
         if(isCorrect == true) {
             const successFeedback = this.scene.get('correct-answer-modal');
-            this.scene.launch('correct-answer-modal');
+            this.scene.launch('correct-answer-modal', { feedbackText: this.positiveFeedbackText });
             this.scene.pause();
 
         } else {
             const successFeedback = this.scene.get('incorrect-answer-modal');
-            this.scene.launch('incorrect-answer-modal');
+            this.scene.launch('incorrect-answer-modal', { feedbackText: this.negativeFeedbackText });
             this.scene.pause();
         }
     }
