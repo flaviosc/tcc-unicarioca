@@ -132,7 +132,7 @@ export default class ChallengeModal extends Phaser.Scene {
         console.log(this.challengeId);
         switch (this.challengeId) {
             case 'CRATE_0':
-                this.showChallengeOne(width, height);
+                this.showChallengeFour(width, height);
             break;
 
             case 'CRATE_1':
@@ -310,13 +310,13 @@ export default class ChallengeModal extends Phaser.Scene {
         const challengeImage = this.add.nineslice(0, -height * 0.25, 500, 250, KIDS_FIGHTING_IMAGE, 0).setOrigin(0.5);    
         this.contentText = this.createContentText(0, 30, width, CHALLENGE_FOUR_TEXT, 600, '18px').setOrigin(0.5);    
 
-        const firstOption = this.add.nineslice(0, 140, 400, 45, BUTTON_KEY, 24).setOrigin(0.5);    
+        const firstOption = this.add.nineslice(0, 140, 400, 45, BUTTON_KEY, 20).setOrigin(0.5);    
         const btnLeftText = this.createButtonText(0, 140, KIDS_FIGHTING_ANSWER_1).setOrigin(0.5);
         
-        const secondOption = this.add.nineslice(0, 200, 400, 45, BUTTON_KEY, 24).setOrigin(0.5);    
+        const secondOption = this.add.nineslice(0, 200, 400, 45, BUTTON_KEY, 20).setOrigin(0.5);    
         const btnMiddleText = this.createButtonText(0, 200, KIDS_FIGHTING_ANSWER_2).setOrigin(0.5);
 
-        const thirdOption =  this.add.nineslice(0, 260, 400, 45, BUTTON_KEY, 24).setOrigin(0.5);    
+        const thirdOption =  this.add.nineslice(0, 260, 400, 45, BUTTON_KEY, 20).setOrigin(0.5);    
         const btnRightText = this.createButtonText(0, 260, KIDS_FIGHTING_ANSWER_3).setOrigin(0.5);
 
         this.container.add(challengeImage);
@@ -371,7 +371,7 @@ export default class ChallengeModal extends Phaser.Scene {
         return label;
     }
 
-    showFeedbackModal(isCorrect) {
+    showFeedbackModal(isCorrect, button) {
         const successFeedback = this.scene.get('feedback-answer-modal');
         this.scene.launch('feedback-answer-modal', { correctAnswer: isCorrect, feedbackText: this.feedbackText });
         this.scene.pause();
