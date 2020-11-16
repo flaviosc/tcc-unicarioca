@@ -5,10 +5,12 @@ import TextLabel from '../ui/TextLabel';
 const PANEL = 'panel1';
 
 const BUTTON_KEY = 'button';
+const BUTTON_SQUARE_KEY = 'buttonsquare';
 const SAD_CHILDREN_IMAGE = 'sadchildren';
 const FEAR_CHILDREN_IMAGE = 'fearchildren';
 const HAPPY_CHILDREN_IMAGE = 'happychildren';
 const KIDS_FIGHTING_IMAGE = 'kidsfighting'
+const KIDS_FIGHTING_IMAGE_2 = 'kidsfighting2'
 
 const SAD_EMOTION_KEY = 'sademotion';
 const HAPPY_EMOTION_KEY = 'happyemotion';
@@ -24,6 +26,8 @@ const DISGUSTED_BUTTON_TEXT = 'Com nojo';
 const KIDS_FIGHTING_ANSWER_1 = 'Tomar o brinquedo de volta';
 const KIDS_FIGHTING_ANSWER_2 = 'Empurrar o amiguinho';
 const KIDS_FIGHTING_ANSWER_3 = 'Conversar e mostrar que não gostou da atitude';
+const KIDS_FIGHTING_ANSWER_4 = 'Chamar o(a) professor(a)';
+const KIDS_FIGHTING_ANSWER_5 = 'Bater no amiguinho';
 
 const CHALLENGE_ONE_TEXT = 
 `Julio não parece estar muito bem...
@@ -42,6 +46,11 @@ const CHALLENGE_FOUR_TEXT =
  Benjamin acabou tomando o boneco.\n
  O que poderia ser feito nesta situação?`;
 
+const CHALLENGE_FIVE_TEXT = 
+`Enquanto estavam brincando, Roger puxou o cabelo da Camila. 
+ Ela começou a chorar.\n
+ O que poderia ser feito nesta situação?`;
+
 const POSITIVE_FEEDBACK_CHALLENGE_ONE = 
 `Realmente, o nosso amiguinho está bem triste...
 `;
@@ -50,12 +59,16 @@ const POSITIVE_FEEDBACK_CHALLENGE_TWO =
 `Ele tem muito medo de cachorros, e viu um enquanto andava pela rua...
 `;
 
+const POSITIVE_FEEDBACK_CHALLENGE_THREE = 
+`Ele vai passar as férias na casa dos avós, e ele adora!
+`;
+
 const POSITIVE_FEEDBACK_CHALLENGE_FOUR = 
 `Conversar é sempre a melhor escolha!
 `;
 
-const POSITIVE_FEEDBACK_CHALLENGE_THREE = 
-`Ele vai passar as férias na casa dos avós, e ele adora!
+const POSITIVE_FEEDBACK_CHALLENGE_FIVE = 
+`O (A) professor(a) vai chamar a atenção de Roger para que ele não faça mais isso 
 `;
 
 const NEGATIVE_FEEDBACK_HAPPY =
@@ -79,8 +92,12 @@ const NEGATIVE_FEEDBACK_DISGUSTED =
 
 const NEGATIVE_FEEDBACK_KIDS_FIGHTING_1 = 
 `Não é legal tirar o brinquedo da mão dos amigos...`;
+
 const NEGATIVE_FEEDBACK_KIDS_FIGHTING_2 = 
 `O amiguinho pode se machucar, não faça isso!`;
+
+const NEGATIVE_FEEDBACK_KIDS_FIGHTING_3 =
+`Não pode bater no(a) amiguinho(a)!`;
 
 
 export default class ChallengeModal extends Phaser.Scene {
@@ -114,6 +131,8 @@ export default class ChallengeModal extends Phaser.Scene {
         this.load.image(DISGUSTED_EMOTION_KEY, 'assets/disgusted_icon.png')
         this.load.image(HAPPY_CHILDREN_IMAGE, 'assets/happy_children.png');
         this.load.image(KIDS_FIGHTING_IMAGE, 'assets/kids_fighting.jpg');
+        this.load.image(KIDS_FIGHTING_IMAGE_2, 'assets/kids_fighting_2.jpg');
+        this.load.image(BUTTON_SQUARE_KEY, 'assets/button_square.png');
     }
 
     create() {
@@ -132,7 +151,7 @@ export default class ChallengeModal extends Phaser.Scene {
         console.log(this.challengeId);
         switch (this.challengeId) {
             case 'CRATE_0':
-                this.showChallengeFour(width, height);
+                this.showChallengeOne(width, height);
             break;
 
             case 'CRATE_1':
@@ -147,7 +166,7 @@ export default class ChallengeModal extends Phaser.Scene {
             break;
 
             case 'CRATE_4':
-                
+                this.showChallengeFive(width, height);
             break;
 
             case 'CRATE_5':
@@ -310,13 +329,13 @@ export default class ChallengeModal extends Phaser.Scene {
         const challengeImage = this.add.nineslice(0, -height * 0.25, 500, 250, KIDS_FIGHTING_IMAGE, 0).setOrigin(0.5);    
         this.contentText = this.createContentText(0, 30, width, CHALLENGE_FOUR_TEXT, 600, '18px').setOrigin(0.5);    
 
-        const firstOption = this.add.nineslice(0, 140, 400, 45, BUTTON_KEY, 20).setOrigin(0.5);    
+        const firstOption = this.add.nineslice(0, 140, 400, 48, BUTTON_SQUARE_KEY, 24).setOrigin(0.5);    
         const btnLeftText = this.createButtonText(0, 140, KIDS_FIGHTING_ANSWER_1).setOrigin(0.5);
         
-        const secondOption = this.add.nineslice(0, 200, 400, 45, BUTTON_KEY, 20).setOrigin(0.5);    
+        const secondOption = this.add.nineslice(0, 200, 400, 48, BUTTON_SQUARE_KEY, 24).setOrigin(0.5);    
         const btnMiddleText = this.createButtonText(0, 200, KIDS_FIGHTING_ANSWER_2).setOrigin(0.5);
 
-        const thirdOption =  this.add.nineslice(0, 260, 400, 45, BUTTON_KEY, 20).setOrigin(0.5);    
+        const thirdOption =  this.add.nineslice(0, 260, 400, 48, BUTTON_SQUARE_KEY, 24).setOrigin(0.5);    
         const btnRightText = this.createButtonText(0, 260, KIDS_FIGHTING_ANSWER_3).setOrigin(0.5);
 
         this.container.add(challengeImage);
@@ -344,6 +363,46 @@ export default class ChallengeModal extends Phaser.Scene {
                    .on('pointerover', () => { thirdOption.setTint(0xfadcaa); })
                    .on('pointerout', () => { thirdOption.clearTint(); })
     }
+
+    showChallengeFive(width, height) {
+        const challengeImage = this.add.nineslice(0, -height * 0.25, 450, 250, KIDS_FIGHTING_IMAGE_2, 27).setOrigin(0.5);    
+        this.contentText = this.createContentText(0, 30, width, CHALLENGE_FIVE_TEXT, 600, '18px').setOrigin(0.5);    
+
+        const firstOption = this.add.nineslice(0, 140, 400, 48, BUTTON_SQUARE_KEY, 24).setOrigin(0.5);    
+        const btnLeftText = this.createButtonText(0, 140, KIDS_FIGHTING_ANSWER_5).setOrigin(0.5);
+        
+        const secondOption = this.add.nineslice(0, 200, 400, 48, BUTTON_SQUARE_KEY, 24).setOrigin(0.5);    
+        const btnMiddleText = this.createButtonText(0, 200, KIDS_FIGHTING_ANSWER_4).setOrigin(0.5);
+
+        const thirdOption =  this.add.nineslice(0, 260, 400, 48, BUTTON_SQUARE_KEY, 24).setOrigin(0.5);    
+        const btnRightText = this.createButtonText(0, 260, KIDS_FIGHTING_ANSWER_2).setOrigin(0.5);
+
+        this.container.add(challengeImage);
+        this.container.add(this.contentText);
+
+        this.container.add(firstOption);
+        this.container.add(btnLeftText);
+
+        this.container.add(secondOption);
+        this.container.add(btnMiddleText);
+
+        this.container.add(thirdOption);
+        this.container.add(btnRightText);
+
+        firstOption.setInteractive()
+                   .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_KIDS_FIGHTING_3, this.showFeedbackModal(false); firstOption.setTint(0xff0000)})
+                   .on('pointerover', () => { firstOption.setTint(0xfadcaa); })
+                   .on('pointerout', () => { firstOption.clearTint(); })
+        secondOption.setInteractive()
+                    .on('pointerdown', () => { this.feedbackText = POSITIVE_FEEDBACK_CHALLENGE_FIVE, this.showFeedbackModal(true); secondOption.setTint(0xff00) })
+                    .on('pointerover', () => { secondOption.setTint(0xfadcaa); })
+                    .on('pointerout', () => { secondOption.clearTint(); })
+        thirdOption.setInteractive()
+                   .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_KIDS_FIGHTING_2, this.showFeedbackModal(false); thirdOption.setTint(0xff0000) })
+                   .on('pointerover', () => { thirdOption.setTint(0xfadcaa); })
+                   .on('pointerout', () => { thirdOption.clearTint(); })
+    }
+
 
     createImage(width, height, key) {
         let imageObject = this.add.image(width, height, key);
