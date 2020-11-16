@@ -1,7 +1,10 @@
 import Phaser from 'phaser';
 import TextLabel from '../ui/TextLabel';
+import UiImage from '../ui/UiImage';
 
-const QUESTION_LABEL = 'Como você está se sentindo hoje?\n Clique em uma das imagens abaixo:';
+const PANEL_DIALOG = 'panel1';
+
+const HEADER_LABEL = 'Como você está se sentindo hoje?\n Clique em uma das imagens abaixo:';
 const SAD_EMOTION_KEY = 'sademotion';
 const HAPPY_EMOTION_KEY = 'happyemotion';
 const ANGRY_EMOTION_KEY = 'angryemotion';
@@ -27,35 +30,51 @@ export default class MoodQuestionModal extends Phaser.Scene {
         const width = this.scale.width;
         const height = this.scale.height;
     
-        this.container = this.add.container(width * 0.5, 200);
-        const panel = this.add.nineslice(width * 0.1, height * 0.05, width * 0.8, height * 0.8, 'panel1', 24).setOrigin(0,0);
+        this.container = this.add.container(width * 0.5, height * 0.5);
+        const panel = this.add.nineslice(0, -10 , width * 0.8, height * 0.9, PANEL_DIALOG, 24).setOrigin(0.5);        
 
-        const labelText = new TextLabel(this, width * 0.32, height * 0.2, QUESTION_LABEL, { fontFamily: 'Comic Sans MS', fontSize: '38px', fill: '#000', align: 'center', padding: 10, wordWrap: { width: 550 } }).setOrigin(0,0)
+        const labelText = new TextLabel(this, 0, -height * 0.25, HEADER_LABEL, { fontFamily: 'Comic Sans MS', fontSize: '38px', fill: '#000', align: 'center', padding: 10, wordWrap: { width: width * 0.8 } })
+                          .setOrigin(0.5);
 
-        const happyIcon = this.add.nineslice(width * 0.3, 400, 50, 50, HAPPY_EMOTION_KEY, 0).setOrigin(0,0);
-        const sadIcon = this.add.nineslice(width * 0.5, 400, 50, 50, SAD_EMOTION_KEY, 0).setOrigin(0,0);
-        const angryIcon = this.add.nineslice(width * 0.7, 400, 50, 50, ANGRY_EMOTION_KEY, 0).setOrigin(0,0);
+        const happyIcon = new UiImage(this, -width * 0.25, height * 0.1, HAPPY_EMOTION_KEY)
+                              .setOrigin(0.5);
+
+        happyIcon.displayWidth = 80;
+        happyIcon.displayHeight = 80;
+     
+
+        const sadIcon = new UiImage(this, 0, height * 0.1, SAD_EMOTION_KEY)
+                              .setOrigin(0.5);
+                              
+        sadIcon.displayWidth = 80;
+        sadIcon.displayHeight = 80;
+
+        const angryIcon = new UiImage(this, width * 0.25, height * 0.1, ANGRY_EMOTION_KEY)
+                              .setOrigin(0.5);
+
+        angryIcon.displayWidth = 80;
+        angryIcon.displayHeight = 80;
 
         happyIcon.setInteractive()
                 .on('pointerdown', () => { this.selectCharacter()})
-                .on('pointerover', () => { happyIcon.setTint(0xfadcaa); })
-                .on('pointerout', () => { happyIcon.clearTint(); })
+                .on('pointerover', () => { happyIcon.displayWidth = 100; happyIcon.displayHeight = 100; })
+                .on('pointerout', () => { happyIcon.displayWidth = 80; happyIcon.displayHeight = 80; })
 
         sadIcon.setInteractive()
                 .on('pointerdown', () => { this.selectCharacter() })
-                .on('pointerover', () => { sadIcon.setTint(0xfadcaa); })
-                .on('pointerout', () => { sadIcon.clearTint(); })
+                .on('pointerover', () => { sadIcon.displayWidth = 100; sadIcon.displayHeight = 100; })
+                .on('pointerout', () => { sadIcon.displayWidth = 80; sadIcon.displayHeight = 80; })
 
         angryIcon.setInteractive()
                 .on('pointerdown', () => { this.selectCharacter() })
-                .on('pointerover', () => { angryIcon.setTint(0xfadcaa); })
-                .on('pointerout', () => { angryIcon.clearTint(); })
+                .on('pointerover', () => { angryIcon.displayWidth = 100; angryIcon.displayHeight = 100;})
+                .on('pointerout', () => { angryIcon.displayWidth = 80; angryIcon.displayHeight = 80; })
 
-        this.add.existing(panel);
-        this.add.existing(labelText);
-        this.add.existing(happyIcon);
-        this.add.existing(sadIcon);
-        this.add.existing(angryIcon);
+        this.container.add(panel);
+        this.container.add(labelText);
+        this.container.add(happyIcon);
+        this.container.add(sadIcon);
+        this.container.add(angryIcon);
     }
 
     selectCharacter() {
