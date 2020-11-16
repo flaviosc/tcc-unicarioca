@@ -18,7 +18,6 @@ const PLATFORM_RIGHT = 'platformright';
 const SIGN = 'sign_right';
 const CRATE = 'crate';
 const PANEL_FEEDBACK = 'panel2';
-const GREEN_CHECK = 'correct';
 const ARROW_LEFT = 'arrowleft';
 const ARROW_RIGHT = 'arrowright';
 const BUTTON_JUMP = 'buttonjump';
@@ -91,7 +90,6 @@ export default class GameScene extends Phaser.Scene
         this.load.image(SIGN, 'assets/sign.png');
         this.load.image(CRATE, 'assets/question_box.png');
         this.load.image(PANEL_FEEDBACK, 'assets/panel_2.png');
-        this.load.image(GREEN_CHECK, 'assets/green_checkmark.png');
         this.load.image(ARROW_LEFT, 'assets/arrow_left.png');
         this.load.image(ARROW_RIGHT, 'assets/arrow_right.png');
         this.load.image(BUTTON_JUMP, 'assets/button_jump.png');

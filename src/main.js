@@ -3,7 +3,7 @@ import { Plugin as NineSlicePlugin } from 'phaser3-nineslice';
 import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin';
 import InputTextPlugin from 'phaser3-rex-plugins/plugins/inputtext-plugin.js';
 
-import CorrectAnswerModal from './modal/CorrectAnswerModal';
+import FeedbackAnswerModal from './modal/FeedbackAnswerModal';
 import ChallengeModal from './modal/ChallengeModal';
 import GameScene from './scenes/GameScene';
 import StartModal from './modal/StartModal';
@@ -52,7 +52,7 @@ const config = {
 		MoodQuestionModal,
 		StoryModal,
 		ChallengeModal,
-		CorrectAnswerModal,
+		FeedbackAnswerModal,
 	]
 }
 

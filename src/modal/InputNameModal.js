@@ -67,6 +67,6 @@ export default class InputNameModal extends Phaser.Scene {
             text = 'Pontuação';
         }
         this.scene.stop();
-        this.scene.start('first-question-modal', { playerName: text });
+        this.scene.start('mood-question-modal', { playerName: text });
     }
 }

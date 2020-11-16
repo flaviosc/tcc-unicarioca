@@ -10,7 +10,7 @@ export default class MoodQuestionModal extends Phaser.Scene {
     playerName;
 
     constructor() {
-        super('first-question-modal');
+        super('mood-question-modal');
     }
 
     init(config) {
@@ -18,9 +18,9 @@ export default class MoodQuestionModal extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image(SAD_EMOTION_KEY, 'assets/sad.png');
-        this.load.image(HAPPY_EMOTION_KEY, 'assets/happy.png');
-        this.load.image(ANGRY_EMOTION_KEY, 'assets/angry.png');
+        this.load.image(SAD_EMOTION_KEY, 'assets/sad_icon.png');
+        this.load.image(HAPPY_EMOTION_KEY, 'assets/happy_icon.png');
+        this.load.image(ANGRY_EMOTION_KEY, 'assets/angry_icon.png');
     }
 
     create() {
@@ -37,17 +37,17 @@ export default class MoodQuestionModal extends Phaser.Scene {
         const angryIcon = this.add.nineslice(width * 0.7, 400, 50, 50, ANGRY_EMOTION_KEY, 0).setOrigin(0,0);
 
         happyIcon.setInteractive()
-                .on('pointerdown', () => { this.startGame()})
+                .on('pointerdown', () => { this.selectCharacter()})
                 .on('pointerover', () => { happyIcon.setTint(0xfadcaa); })
                 .on('pointerout', () => { happyIcon.clearTint(); })
 
         sadIcon.setInteractive()
-                .on('pointerdown', () => { this.startGame() })
+                .on('pointerdown', () => { this.selectCharacter() })
                 .on('pointerover', () => { sadIcon.setTint(0xfadcaa); })
                 .on('pointerout', () => { sadIcon.clearTint(); })
 
         angryIcon.setInteractive()
-                .on('pointerdown', () => { this.startGame() })
+                .on('pointerdown', () => { this.selectCharacter() })
                 .on('pointerover', () => { angryIcon.setTint(0xfadcaa); })
                 .on('pointerout', () => { angryIcon.clearTint(); })
 
@@ -58,8 +58,7 @@ export default class MoodQuestionModal extends Phaser.Scene {
         this.add.existing(angryIcon);
     }
 
-
-    startGame() {
+    selectCharacter() {
         this.scene.stop();
         this.scene.start('character-select-modal', { scene: 'first-question', playerName: this.playerName });
     }
