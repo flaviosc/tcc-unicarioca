@@ -5,21 +5,33 @@ import TextLabel from '../ui/TextLabel';
 const PANEL = 'panel1';
 
 const BUTTON_KEY = 'button';
-const SAD_CHILDREN_KEY = 'sadchildren';
-const FEAR_CHILDREN_KEY = 'fearchildren';
+const SAD_CHILDREN_IMAGE = 'sadchildren';
+const FEAR_CHILDREN_IMAGE = 'fearchildren';
+const HAPPY_CHILDREN_IMAGE = 'happychildren';
+
 const SAD_EMOTION_KEY = 'sademotion';
 const HAPPY_EMOTION_KEY = 'happyemotion';
 const ANGRY_EMOTION_KEY = 'angryemotion';
 const FEAR_EMOTION_KEY = 'fearemotion';
+const DISGUSTED_EMOTION_KEY = 'disgustedemotion'
+
+const HAPPY_BUTTON_TEXT = 'Feliz';
+const SAD_BUTTON_TEXT = 'Triste';
+const ANGRY_BUTTON_TEXT = 'Com raiva';
+const FEAR_BUTTON_TEXT = 'Com medo';
+const DISGUSTED_BUTTON_TEXT = 'Com nojo';
 
 const CHALLENGE_ONE_TEXT = 
-`O nosso amiguinho da foto não parece estar muito bem...
+`Julio não parece estar muito bem...
 Como você acha que ele está se sentindo?`;
 
 const CHALLENGE_TWO_TEXT = 
-`Este amiguinho viu algo que não gostou muito...
+`Roberto viu algo que não gostou muito...
  Ele está se sentindo: `;
 
+ const CHALLENGE_THREE_TEXT = 
+`Matheus ficou sabendo de uma novidade...
+ Como você acha que ele se sentiu? `;
 
 const POSITIVE_FEEDBACK_CHALLENGE_ONE = 
 `Realmente, o nosso amiguinho está bem triste...
@@ -29,28 +41,28 @@ const POSITIVE_FEEDBACK_CHALLENGE_TWO =
 `Ele tem muito medo de cachorros, e viu um enquanto andava pela rua...
 `;
 
-const NEGATIVE_FEEDBACK_CHALLENGE_ONE_1 =
+const POSITIVE_FEEDBACK_CHALLENGE_THREE = 
+`Ele vai passar as férias na casa dos avós, e ele adora!
+`;
+
+const NEGATIVE_FEEDBACK_HAPPY =
 `Repare novamente no nosso amiguinho. 
  Ele realmente está feliz?
 `;
 
-const NEGATIVE_FEEDBACK_CHALLENGE_ONE_2 = 
+const NEGATIVE_FEEDBACK_ANGRY = 
 `Já vi outros amiguinhos com raiva, e esse nosso amiguinho não parece estar assim...  
  Tem certeza que ele está com raiva?
 `;
 
-const NEGATIVE_FEEDBACK_CHALLENGE_TWO_1 =
-`Pela expressão que este amiguinho fez, ele não parece estar com raiva...
-`
-
-const NEGATIVE_FEEDBACK_CHALLENGE_TWO_2 =
+const NEGATIVE_FEEDBACK_SAD = 
 `Não sei... Ele não parece estar triste...
-`
+`;
 
-const HAPPY_BUTTON_TEXT = 'Feliz';
-const SAD_BUTTON_TEXT = 'Triste';
-const ANGRY_BUTTON_TEXT = 'Com raiva';
-const FEAR_BUTTON_TEXT = 'Com medo';
+const NEGATIVE_FEEDBACK_DISGUSTED = 
+`Será mesmo que ele sentiu nojo?
+ Não parece muito...
+`;
 
 
 export default class ChallengeModal extends Phaser.Scene {
@@ -78,9 +90,11 @@ export default class ChallengeModal extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image(SAD_CHILDREN_KEY, 'assets/sad_children.png');
-        this.load.image(FEAR_CHILDREN_KEY, 'assets/fear_children.png');
+        this.load.image(SAD_CHILDREN_IMAGE, 'assets/sad_children.png');
+        this.load.image(FEAR_CHILDREN_IMAGE, 'assets/fear_children.png');
         this.load.image(FEAR_EMOTION_KEY, 'assets/fear_icon.png')
+        this.load.image(DISGUSTED_EMOTION_KEY, 'assets/disgusted_icon.png')
+        this.load.image(HAPPY_CHILDREN_IMAGE, 'assets/happy_children.png');
     }
 
     create() {
@@ -104,9 +118,8 @@ export default class ChallengeModal extends Phaser.Scene {
             case 'CRATE_1':
                 this.showChallengeTwo(width, height);
             break;
-
             case 'CRATE_2':
-                
+                this.showChallengeThree(width, height);
             break;
         
             case 'CRATE_3':
@@ -139,7 +152,7 @@ export default class ChallengeModal extends Phaser.Scene {
     }
 
     showChallengeOne(width, height) {
-        const challengeImage = this.add.nineslice(0, -height * 0.20, 200, 280, SAD_CHILDREN_KEY, 24).setOrigin(0.5);    
+        const challengeImage = this.add.nineslice(0, -height * 0.20, 200, 280, SAD_CHILDREN_IMAGE, 24).setOrigin(0.5);    
         this.contentText = this.createContentText(0, 30, width, CHALLENGE_ONE_TEXT).setOrigin(0.5);    
 
         const buttonLeft = this.add.nineslice(-200, 160, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
@@ -170,7 +183,7 @@ export default class ChallengeModal extends Phaser.Scene {
         this.container.add(btnRightIcon);
 
         buttonLeft.setInteractive()
-                  .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_CHALLENGE_ONE_1, this.showFeedbackModal(false, buttonLeft); buttonLeft.setTint(0xff0000)})
+                  .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_HAPPY, this.showFeedbackModal(false, buttonLeft); buttonLeft.setTint(0xff0000)})
                   .on('pointerover', () => { buttonLeft.setTint(0xfadcaa); })
                   .on('pointerout', () => { buttonLeft.clearTint(); })
         buttonMiddle.setInteractive()
@@ -178,13 +191,13 @@ export default class ChallengeModal extends Phaser.Scene {
                     .on('pointerover', () => { buttonMiddle.setTint(0xfadcaa); })
                     .on('pointerout', () => { buttonMiddle.clearTint(); })
         buttonRight.setInteractive()
-                   .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_CHALLENGE_ONE_2, this.showFeedbackModal(false, buttonRight); buttonRight.setTint(0xff0000) })
+                   .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_ANGRY, this.showFeedbackModal(false, buttonRight); buttonRight.setTint(0xff0000) })
                    .on('pointerover', () => { buttonRight.setTint(0xfadcaa); })
                    .on('pointerout', () => { buttonRight.clearTint(); })
     }
 
     showChallengeTwo(width, height) {
-        const challengeImage = this.add.nineslice(0, -height * 0.20, 200, 280, FEAR_CHILDREN_KEY, 0).setOrigin(0.5);    
+        const challengeImage = this.add.nineslice(0, -height * 0.20, 200, 280, FEAR_CHILDREN_IMAGE, 0).setOrigin(0.5);    
         this.contentText = this.createContentText(0, 30, width, CHALLENGE_TWO_TEXT).setOrigin(0.5);    
 
         const buttonLeft = this.add.nineslice(-200, 160, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
@@ -219,11 +232,56 @@ export default class ChallengeModal extends Phaser.Scene {
                   .on('pointerover', () => { buttonLeft.setTint(0xfadcaa); })
                   .on('pointerout', () => { buttonLeft.clearTint(); })
         buttonMiddle.setInteractive()
-                    .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_CHALLENGE_TWO_1, this.showFeedbackModal(false, buttonMiddle); buttonMiddle.setTint(0xff0000) })
+                    .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_ANGRY, this.showFeedbackModal(false, buttonMiddle); buttonMiddle.setTint(0xff0000) })
                     .on('pointerover', () => { buttonMiddle.setTint(0xfadcaa); })
                     .on('pointerout', () => { buttonMiddle.clearTint(); })
         buttonRight.setInteractive()
-                   .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_CHALLENGE_TWO_2, this.showFeedbackModal(false, buttonRight); buttonRight.setTint(0xff0000) })
+                   .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_SAD, this.showFeedbackModal(false, buttonRight); buttonRight.setTint(0xff0000) })
+                   .on('pointerover', () => { buttonRight.setTint(0xfadcaa); })
+                   .on('pointerout', () => { buttonRight.clearTint(); })
+    }
+
+    showChallengeThree(width, height) {
+        const challengeImage = this.add.nineslice(0, -height * 0.20, 180, 250, HAPPY_CHILDREN_IMAGE, 0).setOrigin(0.5);    
+        this.contentText = this.createContentText(0, 35, width, CHALLENGE_THREE_TEXT).setOrigin(0.5);    
+
+        const buttonLeft = this.add.nineslice(-200, 160, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
+        const btnLeftText = this.createButtonText(-220, 160, ANGRY_BUTTON_TEXT).setOrigin(0.5);
+        const btnLeftIcon = this.add.nineslice(-150, 160, 25, 25, ANGRY_EMOTION_KEY, 0).setOrigin(0.5);    
+        
+        const buttonMiddle = this.add.nineslice(0, 160, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
+        const btnMiddleText = this.createButtonText(-30, 160, DISGUSTED_BUTTON_TEXT).setOrigin(0.5);
+        const btnMiddleIcon = this.add.nineslice(50, 160, 25, 25, DISGUSTED_EMOTION_KEY, 0).setOrigin(0.5);    
+
+        const buttonRight =  this.add.nineslice(200, 160, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
+        const btnRightText = this.createButtonText(180, 160, HAPPY_BUTTON_TEXT).setOrigin(0.5);
+        const btnRightIcon = this.add.nineslice(260, 160, 25, 25, HAPPY_EMOTION_KEY, 0).setOrigin(0.5);    
+
+        this.container.add(challengeImage);
+        this.container.add(this.contentText);
+
+        this.container.add(buttonLeft);
+        this.container.add(btnLeftText);
+        this.container.add(btnLeftIcon);
+
+        this.container.add(buttonMiddle);
+        this.container.add(btnMiddleText);
+        this.container.add(btnMiddleIcon);
+
+        this.container.add(buttonRight);
+        this.container.add(btnRightText);
+        this.container.add(btnRightIcon);
+
+        buttonLeft.setInteractive()
+                  .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_ANGRY, this.showFeedbackModal(false, buttonLeft); buttonLeft.setTint(0xff0000)})
+                  .on('pointerover', () => { buttonLeft.setTint(0xfadcaa); })
+                  .on('pointerout', () => { buttonLeft.clearTint(); })
+        buttonMiddle.setInteractive()
+                    .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_DISGUSTED, this.showFeedbackModal(false, buttonMiddle); buttonMiddle.setTint(0xff0000) })
+                    .on('pointerover', () => { buttonMiddle.setTint(0xfadcaa); })
+                    .on('pointerout', () => { buttonMiddle.clearTint(); })
+        buttonRight.setInteractive()
+                   .on('pointerdown', () => { this.feedbackText = POSITIVE_FEEDBACK_CHALLENGE_THREE, this.showFeedbackModal(true, buttonRight); buttonRight.setTint(0xff00) })
                    .on('pointerover', () => { buttonRight.setTint(0xfadcaa); })
                    .on('pointerout', () => { buttonRight.clearTint(); })
     }
