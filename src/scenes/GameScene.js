@@ -131,7 +131,7 @@ export default class GameScene extends Phaser.Scene
         
         this.platforms = this.createPlatforms();
         
-        this.groupOneChallenges = this.createBoxChallenges(600, 0);
+        this.groupOneChallenges = this.createBoxChallenges(600, 0, 3);
         this.physics.add.collider(this.groupOneChallenges, this.platforms);
         this.physics.add.collider(this.groupOneChallenges, this.ground);
 
@@ -260,7 +260,6 @@ export default class GameScene extends Phaser.Scene
     }
 
     createPlayer(characterSelected) {
-        console.log(characterSelected);
         const player = this.physics.add.sprite(110, 451, characterSelected);
         player.setBounce(0.2);
         player.setCollideWorldBounds(true);
@@ -289,9 +288,9 @@ export default class GameScene extends Phaser.Scene
        return player;
     }
 
-    createBoxChallenges(horizontalSpacing, index) {
+    createBoxChallenges(horizontalSpacing, index, step) {
         const crate = this.physics.add.group();
-        for (let i = index; i < index+3; i++) {
+        for (let i = index; i < index + step; i++) {
             let crateObject = this.physics.add.image(horizontalSpacing, 50, CRATE)
             crateObject.name = `CRATE_${i}`
             crate.add(crateObject);
@@ -369,7 +368,7 @@ export default class GameScene extends Phaser.Scene
         if(this.groupTwoChallenges == undefined && this.groupOneChallenges.countActive(true) === 0) {
             this.gameLevel = 2;
 
-            this.groupTwoChallenges = this.createBoxChallenges(this.player.x + 400, 3);
+            this.groupTwoChallenges = this.createBoxChallenges(this.player.x + 400, 3, 3);
             this.physics.add.collider(this.groupTwoChallenges, this.platforms);
             this.physics.add.collider(this.groupTwoChallenges, this.ground);
             this.physics.add.overlap(this.player, this.groupTwoChallenges, this.collectBox, null, this);
@@ -378,7 +377,7 @@ export default class GameScene extends Phaser.Scene
         if(this.groupTwoChallenges != undefined && this.groupTwoChallenges.countActive(true) === 0) {
             this.gameLevel = 3;
 
-            this.groupThreeChallenges = this.createBoxChallenges(this.player.x + 400, 6);
+            this.groupThreeChallenges = this.createBoxChallenges(this.player.x + 400, 6, 1);
             this.physics.add.collider(this.groupThreeChallenges, this.platforms);
             this.physics.add.collider(this.groupThreeChallenges, this.ground);
             this.physics.add.overlap(this.player, this.groupThreeChallenges, this.collectBox, null, this);

@@ -30,19 +30,17 @@ export default class CharacterSelectModal extends Phaser.Scene {
 
         const girlPlayer = new UiImage(this, -width * 0.15, 0, GIRL_PLAYER)
                                 .setOrigin(0.5)
-                                .setSize(500, 200)
                                 .setInteractive()
                                 .on('pointerdown', () => { this.startGame(GIRL_PLAYER) })
-                                .on('pointerover', () => { girlPlayer.setTint(0xf4e7d0); })
-                                .on('pointerout', () => { girlPlayer.clearTint(); });;
+                                .on('pointerover', () => { girlPlayer.setTint(0xf4e7d0); girlPlayer.displayWidth = 90; girlPlayer.displayHeight = 120; })
+                                .on('pointerout', () => { girlPlayer.clearTint(); girlPlayer.displayWidth = 80; girlPlayer.displayHeight = 110;});;
 
         const boyPlayer = new UiImage(this, width * 0.1, 0, BOY_PLAYER)
                                 .setOrigin(0.5)
-                                .setSize(500, 200)
                                 .setInteractive()
-                                .on('pointerdown', () => { this.startGame(BOY_PLAYER) })
-                                .on('pointerover', () => { boyPlayer.setTint(0xf4e7d0); })
-                                .on('pointerout', () => { boyPlayer.clearTint(); });
+                                .on('pointerdown', () => { this.startGame(BOY_PLAYER); })
+                                .on('pointerover', () => { boyPlayer.setTint(0xf4e7d0); boyPlayer.displayWidth = 90; boyPlayer.displayHeight = 120;})
+                                .on('pointerout', () => { boyPlayer.clearTint(); boyPlayer.displayWidth = 80; boyPlayer.displayHeight = 110; });
 
         this.container.add(panel);
         this.container.add(girlPlayer);
@@ -50,9 +48,7 @@ export default class CharacterSelectModal extends Phaser.Scene {
         this.container.add(labelText);
     }
 
-
     startGame(character) {
-        console.log(character);
         this.scene.stop();
         this.scene.resume('game-scene', { scene: 'character-select', playerName: this.playerName, characterSelected: character });
     }
