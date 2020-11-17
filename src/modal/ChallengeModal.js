@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 
 import TextLabel from '../ui/TextLabel';
 
-const PANEL = 'panel1';
+const PANEL_DIALOG = 'panel1';
 
 const BUTTON_KEY = 'button';
 const BUTTON_SQUARE_KEY = 'buttonsquare';
@@ -140,7 +140,7 @@ export default class ChallengeModal extends Phaser.Scene {
         const height = this.scale.height;
 
         this.container = this.add.container(width * 0.5, height * 0.5);
-        const panel = this.add.nineslice(0, -10 , width * 0.8, height * 0.9, PANEL, 24).setOrigin(0.5);        
+        const panel = this.add.nineslice(0, -10 , width * 0.8, height * 0.9, PANEL_DIALOG, 24).setOrigin(0.5);        
         this.container.add(panel);
 
         this.loadModalBody(width, height);
@@ -403,6 +403,44 @@ export default class ChallengeModal extends Phaser.Scene {
                    .on('pointerout', () => { thirdOption.clearTint(); })
     }
 
+    showChallengeSix(width, height) {
+        const challengeImage = this.add.nineslice(0, -height * 0.25, 500, 250, KIDS_FIGHTING_IMAGE, 0).setOrigin(0.5);    
+        this.contentText = this.createContentText(0, 30, width, CHALLENGE_FOUR_TEXT, 600, '18px').setOrigin(0.5);    
+
+        const firstOption = this.add.nineslice(0, 140, 400, 48, BUTTON_SQUARE_KEY, 24).setOrigin(0.5);    
+        const btnLeftText = this.createButtonText(0, 140, KIDS_FIGHTING_ANSWER_1).setOrigin(0.5);
+        
+        const secondOption = this.add.nineslice(0, 200, 400, 48, BUTTON_SQUARE_KEY, 24).setOrigin(0.5);    
+        const btnMiddleText = this.createButtonText(0, 200, KIDS_FIGHTING_ANSWER_2).setOrigin(0.5);
+
+        const thirdOption =  this.add.nineslice(0, 260, 400, 48, BUTTON_SQUARE_KEY, 24).setOrigin(0.5);    
+        const btnRightText = this.createButtonText(0, 260, KIDS_FIGHTING_ANSWER_3).setOrigin(0.5);
+
+        this.container.add(challengeImage);
+        this.container.add(this.contentText);
+
+        this.container.add(firstOption);
+        this.container.add(btnLeftText);
+
+        this.container.add(secondOption);
+        this.container.add(btnMiddleText);
+
+        this.container.add(thirdOption);
+        this.container.add(btnRightText);
+
+        firstOption.setInteractive()
+                   .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_KIDS_FIGHTING_1, this.showFeedbackModal(false); firstOption.setTint(0xff0000)})
+                   .on('pointerover', () => { firstOption.setTint(0xfadcaa); })
+                   .on('pointerout', () => { firstOption.clearTint(); })
+        secondOption.setInteractive()
+                    .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_KIDS_FIGHTING_2, this.showFeedbackModal(false); secondOption.setTint(0xff0000) })
+                    .on('pointerover', () => { secondOption.setTint(0xfadcaa); })
+                    .on('pointerout', () => { secondOption.clearTint(); })
+        thirdOption.setInteractive()
+                   .on('pointerdown', () => { this.feedbackText = POSITIVE_FEEDBACK_CHALLENGE_FOUR, this.showFeedbackModal(true); thirdOption.setTint(0xff00) })
+                   .on('pointerover', () => { thirdOption.setTint(0xfadcaa); })
+                   .on('pointerout', () => { thirdOption.clearTint(); })
+    }
 
     createImage(width, height, key) {
         let imageObject = this.add.image(width, height, key);
