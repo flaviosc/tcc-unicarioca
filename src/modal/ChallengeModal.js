@@ -5,6 +5,7 @@ import TextLabel from '../ui/TextLabel';
 const PANEL_DIALOG = 'panel1';
 
 const BUTTON_KEY = 'button';
+const CLICK_SOUND = 'click';
 const BUTTON_SQUARE_KEY = 'buttonsquare';
 const SAD_CHILDREN_IMAGE = 'sadchildren';
 const FEAR_CHILDREN_IMAGE = 'fearchildren';
@@ -13,6 +14,7 @@ const KIDS_FIGHTING_IMAGE = 'kidsfighting'
 const KIDS_FIGHTING_IMAGE_2 = 'kidsfighting2'
 const SCREAMING_CHILDREN_IMAGE = 'screamingchildren';
 const ALONE_CHILDREN_IMAGE = 'alonechildren';
+const QUESTION_SOUND = 'questionsound';
 
 const SAD_EMOTION_KEY = 'sademotion';
 const HAPPY_EMOTION_KEY = 'happyemotion';
@@ -150,6 +152,12 @@ export default class ChallengeModal extends Phaser.Scene {
     /** @type {string} */
     feedbackText;
 
+    /** @type {boolean} */
+    lastChallenge = false;
+
+    questionSound;
+    buttonSound;
+
     constructor() {
         super('challenge-modal');
         this.contentText = undefined;
@@ -158,6 +166,7 @@ export default class ChallengeModal extends Phaser.Scene {
     init(data) {
         this.gameLevel = data.gameLevel;
         this.challengeId = data.challengeId;
+        this.charactedSelected = data.character;
     }
 
     preload() {
@@ -171,11 +180,14 @@ export default class ChallengeModal extends Phaser.Scene {
         this.load.image(BUTTON_SQUARE_KEY, 'assets/button_square.png');
         this.load.image(SCREAMING_CHILDREN_IMAGE, 'assets/screaming_children.png');
         this.load.image(ALONE_CHILDREN_IMAGE, 'assets/alone_children.png');
+        this.load.audio(QUESTION_SOUND, 'assets/audio/drum_loop.wav');
     }
 
     create() {
         const width = this.scale.width;
         const height = this.scale.height;
+
+        this.buttonSound = this.sound.add(CLICK_SOUND, { volume: 0.5 });
 
         this.container = this.add.container(width * 0.5, height * 0.5);
         const panel = this.add.nineslice(0, -10 , width * 0.8, height * 0.9, PANEL_DIALOG, 24).setOrigin(0.5);        
@@ -183,12 +195,19 @@ export default class ChallengeModal extends Phaser.Scene {
 
         this.loadModalBody(width, height);
 
+        this.questionSound = this.sound.add(QUESTION_SOUND, { loop: true, volume: 0.5 });
+        this.questionSound.play();
+
+        this.events.on('resume', (scene, data) => {
+            this.questionSound.play();
+        });
+
     }
 
     loadModalBody(width, height){
         switch (this.challengeId) {
             case 'CRATE_0':
-                this.showChallengeOne(width, height);
+                this.showChallengeSeven(width, height);
             break;
 
             case 'CRATE_1':
@@ -253,15 +272,15 @@ export default class ChallengeModal extends Phaser.Scene {
 
         buttonLeft.setInteractive()
                   .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_HAPPY, this.showFeedbackModal(false, buttonLeft); buttonLeft.setTint(0xff0000)})
-                  .on('pointerover', () => { buttonLeft.setTint(0xfadcaa); })
+                  .on('pointerover', () => { buttonLeft.setTint(0xfadcaa); this.buttonSound.play();  })
                   .on('pointerout', () => { buttonLeft.clearTint(); })
         buttonMiddle.setInteractive()
                     .on('pointerdown', () => { this.feedbackText = POSITIVE_FEEDBACK_CHALLENGE_ONE, this.showFeedbackModal(true, buttonMiddle); buttonMiddle.setTint(0xff00) })
-                    .on('pointerover', () => { buttonMiddle.setTint(0xfadcaa); })
+                    .on('pointerover', () => { buttonMiddle.setTint(0xfadcaa); this.buttonSound.play();})
                     .on('pointerout', () => { buttonMiddle.clearTint(); })
         buttonRight.setInteractive()
                    .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_ANGRY, this.showFeedbackModal(false, buttonRight); buttonRight.setTint(0xff0000) })
-                   .on('pointerover', () => { buttonRight.setTint(0xfadcaa); })
+                   .on('pointerover', () => { buttonRight.setTint(0xfadcaa); this.buttonSound.play();})
                    .on('pointerout', () => { buttonRight.clearTint(); })
     }
 
@@ -298,15 +317,15 @@ export default class ChallengeModal extends Phaser.Scene {
 
         buttonLeft.setInteractive()
                   .on('pointerdown', () => { this.feedbackText = POSITIVE_FEEDBACK_CHALLENGE_TWO, this.showFeedbackModal(true, buttonLeft); buttonLeft.setTint(0xff00)})
-                  .on('pointerover', () => { buttonLeft.setTint(0xfadcaa); })
+                  .on('pointerover', () => { buttonLeft.setTint(0xfadcaa); this.buttonSound.play();})
                   .on('pointerout', () => { buttonLeft.clearTint(); })
         buttonMiddle.setInteractive()
                     .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_ANGRY, this.showFeedbackModal(false, buttonMiddle); buttonMiddle.setTint(0xff0000) })
-                    .on('pointerover', () => { buttonMiddle.setTint(0xfadcaa); })
+                    .on('pointerover', () => { buttonMiddle.setTint(0xfadcaa); this.buttonSound.play();})
                     .on('pointerout', () => { buttonMiddle.clearTint(); })
         buttonRight.setInteractive()
                    .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_SAD, this.showFeedbackModal(false, buttonRight); buttonRight.setTint(0xff0000) })
-                   .on('pointerover', () => { buttonRight.setTint(0xfadcaa); })
+                   .on('pointerover', () => { buttonRight.setTint(0xfadcaa); this.buttonSound.play();})
                    .on('pointerout', () => { buttonRight.clearTint(); })
     }
 
@@ -343,15 +362,15 @@ export default class ChallengeModal extends Phaser.Scene {
 
         buttonLeft.setInteractive()
                   .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_ANGRY, this.showFeedbackModal(false, buttonLeft); buttonLeft.setTint(0xff0000)})
-                  .on('pointerover', () => { buttonLeft.setTint(0xfadcaa); })
+                  .on('pointerover', () => { buttonLeft.setTint(0xfadcaa); this.buttonSound.play();})
                   .on('pointerout', () => { buttonLeft.clearTint(); })
         buttonMiddle.setInteractive()
                     .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_DISGUSTED, this.showFeedbackModal(false, buttonMiddle); buttonMiddle.setTint(0xff0000) })
-                    .on('pointerover', () => { buttonMiddle.setTint(0xfadcaa); })
+                    .on('pointerover', () => { buttonMiddle.setTint(0xfadcaa); this.buttonSound.play();})
                     .on('pointerout', () => { buttonMiddle.clearTint(); })
         buttonRight.setInteractive()
                    .on('pointerdown', () => { this.feedbackText = POSITIVE_FEEDBACK_CHALLENGE_THREE, this.showFeedbackModal(true, buttonRight); buttonRight.setTint(0xff00) })
-                   .on('pointerover', () => { buttonRight.setTint(0xfadcaa); })
+                   .on('pointerover', () => { buttonRight.setTint(0xfadcaa); this.buttonSound.play();})
                    .on('pointerout', () => { buttonRight.clearTint(); })
     }
 
@@ -382,15 +401,15 @@ export default class ChallengeModal extends Phaser.Scene {
 
         firstOption.setInteractive()
                    .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_KIDS_FIGHTING_1, this.showFeedbackModal(false); firstOption.setTint(0xff0000)})
-                   .on('pointerover', () => { firstOption.setTint(0xfadcaa); })
+                   .on('pointerover', () => { firstOption.setTint(0xfadcaa); this.buttonSound.play();})
                    .on('pointerout', () => { firstOption.clearTint(); })
         secondOption.setInteractive()
                     .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_KIDS_FIGHTING_2, this.showFeedbackModal(false); secondOption.setTint(0xff0000) })
-                    .on('pointerover', () => { secondOption.setTint(0xfadcaa); })
+                    .on('pointerover', () => { secondOption.setTint(0xfadcaa); this.buttonSound.play();})
                     .on('pointerout', () => { secondOption.clearTint(); })
         thirdOption.setInteractive()
                    .on('pointerdown', () => { this.feedbackText = POSITIVE_FEEDBACK_CHALLENGE_FOUR, this.showFeedbackModal(true); thirdOption.setTint(0xff00) })
-                   .on('pointerover', () => { thirdOption.setTint(0xfadcaa); })
+                   .on('pointerover', () => { thirdOption.setTint(0xfadcaa); this.buttonSound.play();})
                    .on('pointerout', () => { thirdOption.clearTint(); })
     }
 
@@ -421,15 +440,15 @@ export default class ChallengeModal extends Phaser.Scene {
 
         firstOption.setInteractive()
                    .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_KIDS_FIGHTING_3, this.showFeedbackModal(false); firstOption.setTint(0xff0000)})
-                   .on('pointerover', () => { firstOption.setTint(0xfadcaa); })
+                   .on('pointerover', () => { firstOption.setTint(0xfadcaa); this.buttonSound.play();})
                    .on('pointerout', () => { firstOption.clearTint(); })
         secondOption.setInteractive()
                     .on('pointerdown', () => { this.feedbackText = POSITIVE_FEEDBACK_CHALLENGE_FIVE, this.showFeedbackModal(true); secondOption.setTint(0xff00) })
-                    .on('pointerover', () => { secondOption.setTint(0xfadcaa); })
+                    .on('pointerover', () => { secondOption.setTint(0xfadcaa); this.buttonSound.play();})
                     .on('pointerout', () => { secondOption.clearTint(); })
         thirdOption.setInteractive()
                    .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_KIDS_FIGHTING_2, this.showFeedbackModal(false); thirdOption.setTint(0xff0000) })
-                   .on('pointerover', () => { thirdOption.setTint(0xfadcaa); })
+                   .on('pointerover', () => { thirdOption.setTint(0xfadcaa); this.buttonSound.play();})
                    .on('pointerout', () => { thirdOption.clearTint(); })
     }
 
@@ -460,19 +479,21 @@ export default class ChallengeModal extends Phaser.Scene {
 
         firstOption.setInteractive()
                    .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_SCREAMING_CHILDREN_1, this.showFeedbackModal(false); firstOption.setTint(0xff0000)})
-                   .on('pointerover', () => { firstOption.setTint(0xfadcaa); })
+                   .on('pointerover', () => { firstOption.setTint(0xfadcaa); this.buttonSound.play();})
                    .on('pointerout', () => { firstOption.clearTint(); })
         secondOption.setInteractive()
                     .on('pointerdown', () => { this.feedbackText = POSITIVE_FEEDBACK_CHALLENGE_SIX, this.showFeedbackModal(true); secondOption.setTint(0xff00) })
-                    .on('pointerover', () => { secondOption.setTint(0xfadcaa); })
+                    .on('pointerover', () => { secondOption.setTint(0xfadcaa); this.buttonSound.play();})
                     .on('pointerout', () => { secondOption.clearTint(); })
         thirdOption.setInteractive()
                    .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_SCREAMING_CHILDREN_2, this.showFeedbackModal(false); thirdOption.setTint(0xff0000) })
-                   .on('pointerover', () => { thirdOption.setTint(0xfadcaa); })
+                   .on('pointerover', () => { thirdOption.setTint(0xfadcaa); this.buttonSound.play();})
                    .on('pointerout', () => { thirdOption.clearTint(); })
     }
 
     showChallengeSeven(width, height) {
+        this.lastChallenge = true;
+
         const challengeImage = this.add.nineslice(0, -height * 0.25, 330, 330, ALONE_CHILDREN_IMAGE, 27).setOrigin(0.5);    
         this.contentText = this.createContentText(0, 30, width, CHALLENGE_SEVEN_TEXT, 600, '18px').setOrigin(0.5);    
 
@@ -499,15 +520,15 @@ export default class ChallengeModal extends Phaser.Scene {
 
         firstOption.setInteractive()
                    .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_ALONE_CHILDREN_1, this.showFeedbackModal(false); firstOption.setTint(0xff0000)})
-                   .on('pointerover', () => { firstOption.setTint(0xfadcaa); })
+                   .on('pointerover', () => { firstOption.setTint(0xfadcaa); this.buttonSound.play();})
                    .on('pointerout', () => { firstOption.clearTint(); })
         secondOption.setInteractive()
                     .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_ALONE_CHILDREN_2, this.showFeedbackModal(false); secondOption.setTint(0xff0000) })
-                    .on('pointerover', () => { secondOption.setTint(0xfadcaa); })
+                    .on('pointerover', () => { secondOption.setTint(0xfadcaa); this.buttonSound.play();})
                     .on('pointerout', () => { secondOption.clearTint(); })
         thirdOption.setInteractive()
-                   .on('pointerdown', () => { this.feedbackText = POSITIVE_FEEDBACK_CHALLENGE_SEVEN, this.showFeedbackModal(true); thirdOption.setTint(0xff00) })
-                   .on('pointerover', () => { thirdOption.setTint(0xfadcaa); })
+                   .on('pointerdown', () => { this.feedbackText = POSITIVE_FEEDBACK_CHALLENGE_SEVEN, this.showFeedbackModal(true); thirdOption.setTint(0xff00); })
+                   .on('pointerover', () => { thirdOption.setTint(0xfadcaa); this.buttonSound.play();})
                    .on('pointerout', () => { thirdOption.clearTint(); })
     }
 
@@ -537,9 +558,11 @@ export default class ChallengeModal extends Phaser.Scene {
         return label;
     }
 
-    showFeedbackModal(isCorrect, button) {
+    showFeedbackModal(isCorrect, button) 
+    {
+        this.questionSound.stop();
         const successFeedback = this.scene.get('feedback-answer-modal');
-        this.scene.launch('feedback-answer-modal', { correctAnswer: isCorrect, feedbackText: this.feedbackText });
+        this.scene.launch('feedback-answer-modal', { correctAnswer: isCorrect, feedbackText: this.feedbackText, lastChallenge: this.lastChallenge, character: this.charactedSelected });
         this.scene.pause();
     }
 }

@@ -12,6 +12,9 @@ const SUCCESSTEXT =
 const BUTTONTEXT = `Continuar`;
 const SCENE_POINTS = 50;
 
+const SUCCESS_SOUND = 'successsound';
+const ERROR_SOUND = 'errorsound';
+
 export default class FeedbackAnswerModal extends Phaser.Scene {
 
     /** @type {Phaser.GameObjects.Container} */
@@ -23,6 +26,12 @@ export default class FeedbackAnswerModal extends Phaser.Scene {
     /** @type {string} */
     feedbackText;
 
+    /** @type {boolean} */
+    lastChallenge = false;
+
+    successSound;
+    errorSound; 
+
     constructor() {
         super('feedback-answer-modal');
         this.container = undefined;
@@ -31,11 +40,16 @@ export default class FeedbackAnswerModal extends Phaser.Scene {
     init(data) {
         this.correctAnswer = data.correctAnswer;
         this.feedbackText = data.feedbackText;
+        this.lastChallenge = data.lastChallenge;
+        this.characterSelected = data.character;
+        console.log(this.characterSelected);
     }
 
     preload() {
         this.load.image(CORRECT, 'assets/correct_check.png');
         this.load.image(INCORRECT, 'assets/incorrect_check.png');
+        this.load.audio(ERROR_SOUND, 'assets/audio/error_sound.mp3');
+        this.load.audio(SUCCESS_SOUND, 'assets/audio/success_sound.mp3');
     }
 
     create() {
@@ -70,6 +84,9 @@ export default class FeedbackAnswerModal extends Phaser.Scene {
                     .on('pointerdown', () => { this.returnToGameScene(); })
                     .on('pointerover', () => { okButton.setTint(0xfadcaa); })
                     .on('pointerout', () => { okButton.clearTint(); })
+
+            this.successSound = this.sound.add(SUCCESS_SOUND).play();
+
         } else {
             const incorrectImage = this.add.nineslice(0, -100, 70, 70, INCORRECT, 0).setOrigin(0.5);
             const incorrectText = this.createText(0, 15, width, this.feedbackText, '20px').setOrigin(0.5);
@@ -87,6 +104,8 @@ export default class FeedbackAnswerModal extends Phaser.Scene {
                     .on('pointerdown', () => { this.returnToChallenge(); })
                     .on('pointerover', () => { okButton.setTint(0xfadcaa); })
                     .on('pointerout', () => { okButton.clearTint(); })
+
+            this.errorSound = this.sound.add(ERROR_SOUND).play();
         }
     }
 
@@ -98,18 +117,29 @@ export default class FeedbackAnswerModal extends Phaser.Scene {
     }
 
     returnToGameScene() {
+        if(this.lastChallenge == true) {
+            this.scene.stop('challenge-modal');
+            this.scene.start('end-game-modal', { scene: 'feedback-answer-modal', character: this.characterSelected });
+            return;
+        }
+
+        const challengeModal = this.scene.get('challenge-modal');
+        challengeModal.sound.stopAll();
+
         this.scene.stop('challenge-modal');
         this.scene.stop();
+        
         const gameScene = this.scene.get('game-scene');
-        this.scene.resume('game-scene', { scene: 'correct-answer' });
+        this.scene.resume('game-scene', { scene: 'feedback-answer-modal' });
         gameScene.resetCursors();
         gameScene.checkLevelGame();
         gameScene.updateScore(SCENE_POINTS);
+        gameScene.resumeAudio();
     }
 
     returnToChallenge() {
-        this.scene.stop();
-        const gameScene = this.scene.get('challenge-modal');
+        this.scene.stop('feedback-answer-modal');
+        const challengeScene = this.scene.get('challenge-modal');
         this.scene.resume('challenge-modal');
     }
 }

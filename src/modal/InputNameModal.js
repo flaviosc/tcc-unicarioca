@@ -1,24 +1,25 @@
 import Phaser from 'phaser';
 import TextLabel from '../ui/TextLabel';
 import UiImage from '../ui/UiImage';
+import UpdateLocalStorageData from '../util/UpdateLocalStorageData';
 
-const LABEL_DEFAULT = 'Digite aqui...';
 const PANEL_DIALOG = 'panel1';
 const HEADER_LABEL = 'Digite o seu nome: ';
 
+const CLICK_SOUND = 'click';
+
 export default class InputNameModal extends Phaser.Scene {
+
     constructor() {
         super('input-name-modal');
     }
-
-    preload() {
-
-    }
-
+    
     create() {
         const width = this.scale.width;
         const height = this.scale.height;
-    
+
+        const buttonSound = this.sound.add(CLICK_SOUND, { volume: 0.5 });
+
         this.container = this.add.container(width * 0.5, height * 0.5);
         const panel = this.add.nineslice(0, -10 , width * 0.8, height * 0.9, PANEL_DIALOG, 24).setOrigin(0.5);        
 
@@ -46,8 +47,8 @@ export default class InputNameModal extends Phaser.Scene {
         const buttonImage = new UiImage(this, 0, height * 0.2, 'button')
                             .setOrigin(0.5)
                             .setInteractive()
-                            .on('pointerdown', () => { this.showMoodQuestionModal(inputText.text) })
-                            .on('pointerover', () => { buttonImage.setTint(0xfadcaa); })
+                            .on('pointerdown', () => { this.showMoodQuestionModal(inputText.text), this.sound })
+                            .on('pointerover', () => { buttonImage.setTint(0xfadcaa); buttonSound.play(); })
                             .on('pointerout', () => { buttonImage.clearTint(); });
 
         const buttonText = new TextLabel(this, 0, height * 0.2, 'Continuar', { fontFamily: 'Comic Sans MS', fontSize: '18px', fill: '#000', align: 'right', padding: 10 }).setOrigin(0.5)
@@ -69,10 +70,31 @@ export default class InputNameModal extends Phaser.Scene {
     }
 
     showMoodQuestionModal(text) {
-        if(text.length == 0 || text == LABEL_DEFAULT) {
-            text = 'Pontuação';
-        }
+        const playerData = this.updateLocalStorage(text);
+
         this.scene.stop();
-        this.scene.start('mood-question-modal', { playerName: text });
+        this.scene.start('mood-question-modal', { playerName: text, playerData: playerData });
+    }
+
+    updateLocalStorage(text) {          
+        const gameHistory = {
+           id: this.generateId(),
+           playerName: text,
+           playerCharacter: '',
+           playerMood: '',
+           playerPoints: 0
+        };
+
+        const updateData = new UpdateLocalStorageData(gameHistory);
+        updateData.setData();
+
+        return gameHistory;
+    }
+
+    generateId() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
     }
 }

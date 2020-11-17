@@ -1,9 +1,6 @@
-import Phaser, { Cameras } from 'phaser';
+import Phaser, { Cameras, FacebookInstantGamesLeaderboard } from 'phaser';
 
 import ScoreLabel from '../ui/ScoreLabel';
-
-const GAME_WIDTH = 640;
-const GAME_HEIGHT = 960;
 
 const SKY = 'sky';
 const MOUNTAIN = 'mointains';
@@ -24,6 +21,9 @@ const BUTTON_JUMP = 'buttonjump';
 
 const GIRL_PLAYER = 'girlplayer';
 const BOY_PLAYER = 'boyplayer';
+
+const GAME_SOUNDTRACK = 'gamesoundtrack';
+const CLICK_SOUND = 'click';
 
 /**
  * 
@@ -56,8 +56,7 @@ export default class GameScene extends Phaser.Scene
     /** @type {boolean} */
     isTouch; isRunningToLeft; isRunningToRight; isPlayerJump;
 
-    /** @type {string} */
-    playerName;
+    characterSelected;
 
     groupOneChallenges;
     groupTwoChallenges;
@@ -65,6 +64,12 @@ export default class GameScene extends Phaser.Scene
 
     /** @type {number} */
     gameLevel = 1;
+
+    /** @type {Phaser.Sound.BaseSound} */
+    gameSoundtrack;
+    /** @type {Phaser.Sound.BaseSound} */
+    click;
+
 
 	constructor()
 	{
@@ -96,6 +101,8 @@ export default class GameScene extends Phaser.Scene
 
         this.load.spritesheet(GIRL_PLAYER, 'assets/female_tilesheet.png', { frameWidth: 80, frameHeight: 111 });
         this.load.spritesheet(BOY_PLAYER, 'assets/player_tilesheet.png', { frameWidth: 80, frameHeight: 111 });
+        this.load.audio(GAME_SOUNDTRACK, 'assets/audio/bensound-buddy.mp3');
+        this.load.audio(CLICK_SOUND, 'assets/audio/click1.ogg');
 
         this.cursors = this.input.keyboard.createCursorKeys();
     }
@@ -143,23 +150,22 @@ export default class GameScene extends Phaser.Scene
         this.scene.launch('start-modal');
 
         this.events.on('resume', (scene, data) => {
+            console.log(data);
             if(data.scene === 'character-select') {
-                this.player = this.createPlayer(data.characterSelected);
+                this.scoreLabel = this.createScoreLabel(16, 16, 0, data.playerData.playerName).setScrollFactor(0);
+                this.characterSelected = data.playerData.playerCharacter;
+                this.player = this.createPlayer(this.characterSelected);
                 this.physics.add.collider(this.player, this.ground);
                 this.physics.add.collider(this.player, this.platforms);
                 this.physics.add.overlap(this.player, this.groupOneChallenges, this.collectBox, null, this);
                 this.cameras.main.startFollow(this.player, false, 0.1, 0.1);
-                this.showStoryModal(data.characterSelected);
-            }
-
-            if(this.playerName == undefined && data.scene === 'character-select') {
-                this.playerName = data.playerName;
-                this.scoreLabel = this.createScoreLabel(16, 16, 0, this.playerName).setScrollFactor(0);
+                this.showStoryModal(this.characterSelected);
+                this.gameSoundtrack = this.sound.add(GAME_SOUNDTRACK, { loop: true, volume: 0.5 });
+                this.gameSoundtrack.play();
             }
 
             this.resetCursors();
         });
-
         //touch controls
         this.checkDevice();
         if(this.isTouch == true) {
@@ -313,8 +319,8 @@ export default class GameScene extends Phaser.Scene
 
     showChallangeScene(box) {
        let challangeScene = this.scene.get('challenge-modal');
-       this.scene.launch('challenge-modal', { gameLevel: this.gameLevel, challengeId: box.name });
-       this.scene.pause();
+       this.gameSoundtrack.stop();
+       this.scene.launch('challenge-modal', { gameLevel: this.gameLevel, challengeId: box.name, character: this.characterSelected });
     }
 
     resetCursors() {
@@ -359,7 +365,6 @@ export default class GameScene extends Phaser.Scene
         }, 1700);
     }  
 
-    
     checkLevelGame() {
         if(this.groupOneChallenges && this.groupTwoChallenges && this.groupThreeChallenges) {
             return;
@@ -382,6 +387,10 @@ export default class GameScene extends Phaser.Scene
             this.physics.add.collider(this.groupThreeChallenges, this.ground);
             this.physics.add.overlap(this.player, this.groupThreeChallenges, this.collectBox, null, this);
         }
+    }
+
+    resumeAudio() {
+        this.gameSoundtrack.play();
     }
 
     resize (gameSize) {

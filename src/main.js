@@ -11,6 +11,8 @@ import InputNameModal from './modal/InputNameModal';
 import MoodQuestionModal from './modal/MoodQuestionModal';
 import StoryModal from './modal/StoryModal';
 import CharacterSelectModal from './modal/CharacterSelectModal';
+import RankingModal from './modal/RankingModal';
+import EndGameModal from './modal/EndGameModal';
 
 const config = {
 	type: Phaser.AUTO,
@@ -53,6 +55,8 @@ const config = {
 		StoryModal,
 		ChallengeModal,
 		FeedbackAnswerModal,
+		EndGameModal,     
+		RankingModal
 	]
 }
 
