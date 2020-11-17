@@ -207,7 +207,7 @@ export default class ChallengeModal extends Phaser.Scene {
     loadModalBody(width, height){
         switch (this.challengeId) {
             case 'CRATE_0':
-                this.showChallengeSeven(width, height);
+                this.showChallengeOne(width, height);
             break;
 
             case 'CRATE_1':

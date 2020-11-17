@@ -2,7 +2,7 @@ const key = 'gameHistory';
 
 export default class UpdateLocalStorageData {
 
-    rankingArray = [];
+    rankingArray;
 
     constructor(data){
         this.data = data;
@@ -13,29 +13,22 @@ export default class UpdateLocalStorageData {
     }
 
     setData() {
-        if(this.checkKeyExists() == false) {
-            localStorage.setItem(key, JSON.stringify([this.data]))
+        this.rankingArray = this.getData();
+        if(this.rankingArray == undefined || this.rankingArray == null) {
+            localStorage.setItem(key, JSON.stringify([this.data]));
+        } else {
+            this.checkRecordExists();
         }
+    }
 
-        if(this.checkKeyExists() == true) {
-            this.rankingArray = this.getData();
+    checkRecordExists(records) {
+        const playerRankingIndex = this.rankingArray.findIndex(x => x.id === this.data.id);
+        if(playerRankingIndex != -1) {
+            this.rankingArray[playerRankingIndex] = this.data;
+            localStorage.setItem(key, JSON.stringify(this.rankingArray))
+        } else {
             this.rankingArray.push(this.data);
             localStorage.setItem(key, JSON.stringify(this.rankingArray))
         }
-    }
-
-    updateData(){
-        this.rankingArray = this.getData();
-        const playerRankingIndex = this.rankingArray.findIndex(x => x.id === this.data.id);
-        this.rankingArray[playerRankingIndex] = this.data;
-        localStorage.setItem(key, JSON.stringify(this.rankingArray));
-    }
-
-    checkKeyExists() {
-        if (this.getData() == null || this.getData() == undefined || this.getData().length !== 0) {
-            return false;
-        }
-
-        return true;
     }
 }

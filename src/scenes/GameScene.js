@@ -1,4 +1,5 @@
-import Phaser, { Cameras, FacebookInstantGamesLeaderboard } from 'phaser';
+import Phaser from 'phaser';
+import UpdateLocalStorageData from '../util/UpdateLocalStorageData';
 
 import ScoreLabel from '../ui/ScoreLabel';
 
@@ -70,6 +71,7 @@ export default class GameScene extends Phaser.Scene
     /** @type {Phaser.Sound.BaseSound} */
     click;
 
+    playerData;
 
 	constructor()
 	{
@@ -150,10 +152,10 @@ export default class GameScene extends Phaser.Scene
         this.scene.launch('start-modal');
 
         this.events.on('resume', (scene, data) => {
-            console.log(data);
             if(data.scene === 'character-select') {
-                this.scoreLabel = this.createScoreLabel(16, 16, 0, data.playerData.playerName).setScrollFactor(0);
-                this.characterSelected = data.playerData.playerCharacter;
+                this.playerData = data.playerData;
+                this.scoreLabel = this.createScoreLabel(16, 16, 0, this.playerData.playerName).setScrollFactor(0);
+                this.characterSelected = this.playerData.playerCharacter;
                 this.player = this.createPlayer(this.characterSelected);
                 this.physics.add.collider(this.player, this.ground);
                 this.physics.add.collider(this.player, this.platforms);
@@ -343,7 +345,8 @@ export default class GameScene extends Phaser.Scene
     }
 
     updateScore(points) {
-        this.scoreLabel.add(points);
+        const addPoints = this.scoreLabel.add(points, this.playerData.playerName);
+        this.updateLocalStorage(addPoints);
     }
 
     checkDevice() {
@@ -391,6 +394,11 @@ export default class GameScene extends Phaser.Scene
 
     resumeAudio() {
         this.gameSoundtrack.play();
+    }
+
+    updateLocalStorage(points) {  
+        this.playerData.playerPoints = points;
+        const updateData = new UpdateLocalStorageData(this.playerData).setData();
     }
 
     resize (gameSize) {

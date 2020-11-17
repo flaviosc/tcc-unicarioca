@@ -88,6 +88,6 @@ export default class MoodQuestionModal extends Phaser.Scene {
 
     updateLocalStorage(mood) {  
         this.playerData.playerMood = mood;      
-        const updateData = new UpdateLocalStorageData(this.playerData).updateData();
+        const updateData = new UpdateLocalStorageData(this.playerData).setData();
     }
 }

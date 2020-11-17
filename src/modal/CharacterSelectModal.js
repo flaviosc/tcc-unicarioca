@@ -60,6 +60,6 @@ export default class CharacterSelectModal extends Phaser.Scene {
     updateLocalStorage(character) {  
         console.log(character);
         this.playerData.playerCharacter = character;      
-        const updateData = new UpdateLocalStorageData(this.playerData).updateData();
+        const updateData = new UpdateLocalStorageData(this.playerData).setData();
     }
 }

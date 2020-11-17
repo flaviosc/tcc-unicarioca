@@ -1,7 +1,5 @@
 import Phaser from 'phaser';
 
-const formatScore = (score, playerName) => `${playerName}: ${score}`;
-
 const checkScorePlayerName = (score, playerName)  => {
   if(playerName == '' || playerName == LABEL_DEFAULT) {
     return `Pontuação: ${score}`;
@@ -19,16 +17,18 @@ export default class ScoreLabel extends Phaser.GameObjects.Text
       this.score = score;
     }
 
-    setScore(score){
+    setScore(score, playerName){
       this.score = score;
-      this.updateScoreText();
+      this.updateScoreText(playerName);
     }
 
-    add(points){
-      this.setScore(this.score + points);
+    add(points, playerName){
+      const newScore = this.score + points;
+      this.setScore(newScore, playerName);
+      return newScore;
     }
 
-    updateScoreText(){
-      this.setText(formatScore(this.score));
+    updateScoreText(playerName){
+      this.setText(checkScorePlayerName(this.score, playerName));
     }
 }
