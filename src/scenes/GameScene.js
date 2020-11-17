@@ -264,6 +264,14 @@ export default class GameScene extends Phaser.Scene
         platforms.create((initialX * 6) + 128, height * 0.55, PLATFORM_MIDDLE);
         platforms.create((initialX * 6) + 256, height * 0.55, PLATFORM_RIGHT);
 
+        platforms.create(initialX * 7.5, height * 0.4, PLATFORM_LEFT);
+        platforms.create((initialX * 7.5) + 128, height * 0.4, PLATFORM_MIDDLE);
+        platforms.create((initialX * 7.5) + 256, height * 0.4, PLATFORM_RIGHT);
+
+        platforms.create(initialX * 8.6, height * 0.70, PLATFORM_LEFT);
+        platforms.create((initialX * 8.6) + 128, height * 0.70, PLATFORM_MIDDLE);
+        platforms.create((initialX * 8.6) + 256, height * 0.70, PLATFORM_RIGHT);
+
         return platforms;
     }
 
