@@ -27,6 +27,9 @@ export default class UpdateLocalStorageData {
             this.rankingArray[playerRankingIndex] = this.data;
             localStorage.setItem(key, JSON.stringify(this.rankingArray))
         } else {
+            if(this.rankingArray.length > 5) {
+                this.rankingArray.shift();
+            }
             this.rankingArray.push(this.data);
             localStorage.setItem(key, JSON.stringify(this.rankingArray))
         }
