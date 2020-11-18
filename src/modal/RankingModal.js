@@ -27,7 +27,7 @@ export default class RankingModal extends Phaser.Scene {
   
         const mainPanel = this.add.nineslice(0, -10 , width * 0.8, height * 0.9, PANEL_DIALOG, 24)
         .setOrigin(0.5); 
-                     
+
         const headerText = new TextLabel(this, 0, -height * 0.3, HEADER_LABEL, { fontFamily: 'Comic Sans MS', fontSize: '38px', fill: '#000', align: 'center', padding: 10, wordWrap: { width: width / 2 } })
                                 .setOrigin(0.5);
 
@@ -73,6 +73,9 @@ export default class RankingModal extends Phaser.Scene {
 
                 paddingHeight += 50;
             });
+        } else {
+            const defaultLabel = new TextLabel(this, 0, 0, 'Sem dados para exibição no momento', { fontSize: '25px', fill: '#000', fontStyle: 'bold' }).setOrigin(0.5);
+            this.container.add(defaultLabel);
         }
     }
 
