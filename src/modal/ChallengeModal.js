@@ -532,11 +532,6 @@ export default class ChallengeModal extends Phaser.Scene {
                    .on('pointerout', () => { thirdOption.clearTint(); })
     }
 
-    createImage(width, height, key) {
-        let imageObject = this.add.image(width, height, key);
-        return imageObject; 
-    }
-
     createContentText(x, y, width, text, wordWrap, fontSize) {
         if(wordWrap == undefined) {
             wordWrap = width / 2;

@@ -117,7 +117,9 @@ export default class FeedbackAnswerModal extends Phaser.Scene {
     }
 
     returnToGameScene() {
+        const gameScene = this.scene.get('game-scene');
         if(this.lastChallenge == true) {
+            gameScene.updateScore(SCENE_POINTS);
             this.scene.stop('challenge-modal');
             this.scene.start('end-game-modal', { scene: 'feedback-answer-modal', character: this.characterSelected });
             return;
@@ -129,7 +131,6 @@ export default class FeedbackAnswerModal extends Phaser.Scene {
         this.scene.stop('challenge-modal');
         this.scene.stop();
         
-        const gameScene = this.scene.get('game-scene');
         this.scene.resume('game-scene', { scene: 'feedback-answer-modal' });
         gameScene.resetCursors();
         gameScene.checkLevelGame();

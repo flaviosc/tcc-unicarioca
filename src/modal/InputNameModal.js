@@ -42,7 +42,8 @@ export default class InputNameModal extends Phaser.Scene {
             let text = this.checkNameLength(inputText.text);
             inputText.text = text;
         })
-        .setOrigin(0.5);
+        .setOrigin(0.5)
+        .setFocus();
 
         const buttonImage = new UiImage(this, 0, height * 0.2, 'button')
                             .setOrigin(0.5)
