@@ -58,10 +58,10 @@ export default class EndGameModal extends Phaser.Scene {
 
         let finalImagePlayer;
         if(this.characterSelected == GIRL_PLAYER) {
-            finalImagePlayer = new UiImage(this, 0, -height * 0.17, GIRL_PLAYER_ENDGAME)
+            finalImagePlayer = new UiImage(this, 0, -height * 0.20, GIRL_PLAYER_ENDGAME)
             .setOrigin(0.5);
         } else if (this.characterSelected == BOY_PLAYER) {
-            finalImagePlayer = new UiImage(this, 0, -height * 0.17, BOY_PLAYER_ENDGAME)
+            finalImagePlayer = new UiImage(this, 0, -height * 0.20, BOY_PLAYER_ENDGAME)
             .setOrigin(0.5);
         }
 
