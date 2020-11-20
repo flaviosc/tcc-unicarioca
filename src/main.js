@@ -9,7 +9,7 @@ import GameScene from './scenes/GameScene';
 import StartModal from './modal/StartModal';
 import InputNameModal from './modal/InputNameModal';
 import MoodQuestionModal from './modal/MoodQuestionModal';
-import StoryModal from './modal/StoryModal';
+import HelpModal from './modal/HelpModal';
 import CharacterSelectModal from './modal/CharacterSelectModal';
 import RankingModal from './modal/RankingModal';
 import EndGameModal from './modal/EndGameModal';
@@ -52,7 +52,7 @@ const config = {
 		InputNameModal,
 		CharacterSelectModal,
 		MoodQuestionModal,
-		StoryModal,
+		HelpModal,
 		ChallengeModal,
 		FeedbackAnswerModal,
 		EndGameModal,     
