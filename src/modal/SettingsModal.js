@@ -8,16 +8,12 @@ const SOUND_LABEL =
 `Som`;
 const CLICK_SOUND = 'click';
 const CHECK = 'checkmark';
-const GAME_SOUNDTRACK = 'gamesoundtrack';
 
 export default class SettingsModal extends Phaser.Scene
 {
 
-  isPlayAudio;
-
   constructor() {
     super('settings-modal');
-    this.muteAudio = false;
   }
 
   preload() {
@@ -33,7 +29,7 @@ export default class SettingsModal extends Phaser.Scene
 
       camera.setZoom(0.85);
 
-      this.settingsContainer = this.add.container(0, 110).setScrollFactor(0);
+      this.settingsContainer = this.add.container(width + 140, 10).setScrollFactor(0);
       const settingsPanel = this.add.nineslice(0,0, 250, 50, PANEL_FEEDBACK, 24).setScrollFactor(0);
       const checkPanel = this.add.nineslice(10, 10, 30, 30, CHECK_PANEL, 0).setScrollFactor(0);
       this.checkmark = new UiImage(this, 25, 25, CHECK).setScrollFactor(0);
@@ -49,9 +45,28 @@ export default class SettingsModal extends Phaser.Scene
                    .on('pointerdown', () => { this.toggleAudio(); this.sound.play(CLICK_SOUND); })
                    .on('pointerover', () => { checkPanel.setTint(0xd9d8d7); })
                    .on('pointerout', () => { checkPanel.clearTint(); })
+  }
 
-      this.add.existing(this.settingsContainer);
+  show() {
+    const width = this.scale.width;
 
+    this.tweens.add({
+      targets: this.settingsContainer,
+      x: width - 260,
+      duration: 300,
+      ease: Phaser.Math.Easing.Sine.InOut
+    });  
+  }
+
+  hide() {
+    const width = this.scale.width;
+
+    this.tweens.add({
+      targets: this.settingsContainer,
+      x: width + 260,
+      duration: 300,
+      ease: Phaser.Math.Easing.Sine.InOut
+    });  
   }
 
   toggleAudio() {

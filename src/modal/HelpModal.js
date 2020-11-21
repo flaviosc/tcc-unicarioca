@@ -58,13 +58,13 @@ export default class HelpModal extends Phaser.Scene {
                                .setOrigin(0.5);
 
         const arrowKeysImage = new UiImage(this, -width * 0.20, -height * 0.1, ARROW_KEYS_IMAGE)
-        .setOrigin(0.5)
+                                .setOrigin(0.5)
 
         const labelTextBody2 = new TextLabel(this, width * 0.05, height * 0.18, BODY_LABEL_2, { fontFamily: 'Comic Sans MS', fontSize: '28px', fill: '#000', align: 'right', padding: 10, wordWrap: { width: width / 3  }})
-        .setOrigin(0.5);
+                                .setOrigin(0.5);
 
         const crate = new UiImage(this, -width * 0.20, height * 0.18, CRATE)
-                            .setOrigin(0.5);
+                                .setOrigin(0.5);
 
         arrowKeysImage.displayWidth = 250;
         arrowKeysImage.displayHeight = 180;

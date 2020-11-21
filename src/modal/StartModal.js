@@ -39,7 +39,7 @@ export default class StartModal extends Phaser.Scene
     const width = this.scale.width;
     const height = this.scale.height;    
 
-    this.container = this.add.container(width * 0.5, height * 0.5);
+    this.container = this.add.container(width * 0.5, height  + 10);
     const panel = this.add.nineslice(0, -10 , width * 0.8, height * 0.9, PANEL_DIALOG, 24).setOrigin(0.5);        
 
     const homeText = new TextLabel(this, 0, -height * 0.3, HEADER_LABEL, { fontFamily: 'Comic Sans MS', fontSize: '38px', fill: '#000', align: 'center', padding: 10, wordWrap: { width: width / 2 } })
@@ -98,6 +98,13 @@ export default class StartModal extends Phaser.Scene
     this.container.add(buttonRankingText);
     this.container.add(buttonHelpImage);
     this.container.add(buttonHelpText);
+
+    this.tweens.add({
+      targets: this.container,
+      y: height * 0.5,
+      duration: 300,
+      ease: Phaser.Math.Easing.Sine.InOut
+    });  
   }
 
 

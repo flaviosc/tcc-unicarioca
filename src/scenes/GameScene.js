@@ -85,6 +85,7 @@ export default class GameScene extends Phaser.Scene
         this.countLevelTwoChallenges = 0;
         this.countLevelThreeChallenges = 0;
         this.isMenuOpen = false;
+        this.settingsScene = undefined;
     }
     
 	preload()
@@ -205,6 +206,9 @@ export default class GameScene extends Phaser.Scene
             this.cameras.main.setBounds(0, 0, width * 10, height);
             this.physics.world.setBounds(0, 0, width * 10, height);
         }
+
+        this.settingsScene = this.scene.get('settings-modal');
+        this.settingsScene.scene.start();
 
         this.scene.pause();
         
@@ -430,12 +434,13 @@ export default class GameScene extends Phaser.Scene
     }
 
     toggleSettingsMenu(){
+        
         this.isMenuOpen = !this.isMenuOpen;
 
         if(this.isMenuOpen == true) {
-            this.scene.add('settings-modal', SettingsModal, true);
+            this.settingsScene.show();
         } else {
-            this.scene.remove('settings-modal');
+            this.settingsScene.hide();
         }
     }
 

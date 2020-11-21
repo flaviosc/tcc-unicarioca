@@ -13,6 +13,7 @@ import HelpModal from './modal/HelpModal';
 import CharacterSelectModal from './modal/CharacterSelectModal';
 import RankingModal from './modal/RankingModal';
 import EndGameModal from './modal/EndGameModal';
+import SettingsModal from './modal/SettingsModal';
 
 const config = {
 	type: Phaser.AUTO,
@@ -57,6 +58,7 @@ const config = {
 		FeedbackAnswerModal,
 		EndGameModal,     
 		RankingModal,
+		SettingsModal
 	]
 }
 
