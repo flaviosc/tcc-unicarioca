@@ -148,6 +148,8 @@ export default class ChallengeModal extends Phaser.Scene {
 
     /** @type {number} */
     gameLevel;
+    scenePoints;
+    attemptCounter;
 
     /** @type {string} */
     feedbackText;
@@ -160,6 +162,8 @@ export default class ChallengeModal extends Phaser.Scene {
     constructor() {
         super('challenge-modal');
         this.contentText = undefined;
+        this.scenePoints = 0;
+        this.attemptCounter = 0;
     }
 
     init(data) {
@@ -550,11 +554,30 @@ export default class ChallengeModal extends Phaser.Scene {
         return label;
     }
 
-    showFeedbackModal(isCorrect, button) 
+    updateAttemptCounter(isCorrectAnswer) {
+        if(isCorrectAnswer == false) {
+            this.attemptCounter++;
+        } else {
+            return;
+        }
+    }
+
+    setScenePoints() {
+        this.attemptCounter == 0 ? this.scenePoints = 10 : this.scenePoints = 5;
+        this.attemptCounter = 0;
+    }
+
+    checkAnswer(isCorrectAnswer)  {
+        this.updateAttemptCounter(isCorrectAnswer);
+        if(isCorrectAnswer == true) {
+            this.setScenePoints();
+        }
+    }
+    showFeedbackModal(isCorrectAnswer) 
     {
+        this.checkAnswer(isCorrectAnswer);
         this.questionSound.stop();
-        const successFeedback = this.scene.get('feedback-answer-modal');
-        this.scene.launch('feedback-answer-modal', { correctAnswer: isCorrect, feedbackText: this.feedbackText, lastChallenge: this.lastChallenge, character: this.charactedSelected });
+        this.scene.launch('feedback-answer-modal', { correctAnswer: isCorrectAnswer, feedbackText: this.feedbackText, lastChallenge: this.lastChallenge, character: this.charactedSelected, scenePoints: this.scenePoints });
         this.scene.pause();
     }
 }

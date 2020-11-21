@@ -10,7 +10,6 @@ const SUCCESSTEXT =
 `Muito bem!`;
 
 const BUTTONTEXT = `Continuar`;
-const SCENE_POINTS = 50;
 
 const SUCCESS_SOUND = 'successsound';
 const ERROR_SOUND = 'errorsound';
@@ -42,7 +41,7 @@ export default class FeedbackAnswerModal extends Phaser.Scene {
         this.feedbackText = data.feedbackText;
         this.lastChallenge = data.lastChallenge;
         this.characterSelected = data.character;
-        console.log(this.characterSelected);
+        this.scenePoints = data.scenePoints;
     }
 
     preload() {
@@ -119,7 +118,7 @@ export default class FeedbackAnswerModal extends Phaser.Scene {
     returnToGameScene() {
         const gameScene = this.scene.get('game-scene');
         if(this.lastChallenge == true) {
-            gameScene.updateScore(SCENE_POINTS);
+            gameScene.updateScore(this.scenePoints);
             this.scene.stop('challenge-modal');
             this.scene.start('end-game-modal', { scene: 'feedback-answer-modal', character: this.characterSelected });
             return;
@@ -134,7 +133,7 @@ export default class FeedbackAnswerModal extends Phaser.Scene {
         this.scene.resume('game-scene', { scene: 'feedback-answer-modal' });
         gameScene.resetCursors();
         gameScene.checkLevelGame();
-        gameScene.updateScore(SCENE_POINTS);
+        gameScene.updateScore(this.scenePoints);
         gameScene.resumeAudio();
     }
 

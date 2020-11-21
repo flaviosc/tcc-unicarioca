@@ -82,6 +82,6 @@ export default class HelpModal extends Phaser.Scene {
     returnToStartModal() {
         this.scene.stop();
         this.startModal = this.scene.get('start-modal');
-        this.scene.start('start-modal');
+        this.scene.start('start-modal', { scene: 'help-modal' });
     }
 }
