@@ -34,8 +34,6 @@ export default class HelpModal extends Phaser.Scene {
     create() {
         const width = this.scale.width;
         const height = this.scale.height;
-
-        const buttonSound = this.sound.add(CLICK_SOUND, { volume: 0.5 });
     
         this.container = this.add.container(width * 0.5, height * 0.5);
         const panel = this.add.nineslice(0, -10 , width * 0.8, height * 0.9, PANEL_DIALOG, 24).
@@ -49,7 +47,7 @@ export default class HelpModal extends Phaser.Scene {
                             .setOrigin(0.5)
                             .setInteractive()
                             .on('pointerdown', () => { this.returnToStartModal() })
-                            .on('pointerover', () => { buttonImage.setTint(0xfadcaa); buttonSound.play(); })
+                            .on('pointerover', () => { buttonImage.setTint(0xfadcaa); this.sound.play(CLICK_SOUND); })
                             .on('pointerout', () => { buttonImage.clearTint(); });
 
 

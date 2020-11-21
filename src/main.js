@@ -56,7 +56,7 @@ const config = {
 		ChallengeModal,
 		FeedbackAnswerModal,
 		EndGameModal,     
-		RankingModal
+		RankingModal,
 	]
 }
 

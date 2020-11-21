@@ -37,9 +37,7 @@ export default class StartModal extends Phaser.Scene
   create()
   {
     const width = this.scale.width;
-    const height = this.scale.height;
-
-    const buttonSound = this.sound.add(CLICK_SOUND, { volume: 0.5 });
+    const height = this.scale.height;    
 
     this.container = this.add.container(width * 0.5, height * 0.5);
     const panel = this.add.nineslice(0, -10 , width * 0.8, height * 0.9, PANEL_DIALOG, 24).setOrigin(0.5);        
@@ -64,7 +62,7 @@ export default class StartModal extends Phaser.Scene
                             .setOrigin(0.5)
                             .setInteractive()
                             .on('pointerdown', () => { this.showInputNameModal(); })
-                            .on('pointerover', () => { buttonImage.setTint(0xfadcaa); buttonSound.play(); })
+                            .on('pointerover', () => { buttonImage.setTint(0xfadcaa); this.sound.play(CLICK_SOUND); })
                             .on('pointerout', () => { buttonImage.clearTint(); });
 
     const buttonText = new TextLabel(this, 0, height * 0.2, 'Jogar', { fontFamily: 'Comic Sans MS', fontSize: '18px', fill: '#000', align: 'right', padding: 10 }).setOrigin(0.5);
@@ -74,7 +72,7 @@ export default class StartModal extends Phaser.Scene
                             .setOrigin(0.5)
                             .setInteractive()
                             .on('pointerdown', () => { this.showRankingModal(); })
-                            .on('pointerover', () => { buttonRankingImage.setTint(0xfadcaa); buttonSound.play(); })
+                            .on('pointerover', () => { buttonRankingImage.setTint(0xfadcaa); this.sound.play(CLICK_SOUND); })
                             .on('pointerout', () => { buttonRankingImage.clearTint(); });
     
     const buttonRankingText = new TextLabel(this, 0, height * 0.27, 'Ranking', { fontFamily: 'Comic Sans MS', fontSize: '18px', fill: '#000', align: 'right', padding: 10 }).setOrigin(0.5);
@@ -83,7 +81,7 @@ export default class StartModal extends Phaser.Scene
     .setOrigin(0.5)
     .setInteractive()
     .on('pointerdown', () => { this.showHelp(); })
-    .on('pointerover', () => { buttonHelpImage.setTint(0xfadcaa); buttonSound.play(); })
+    .on('pointerover', () => { buttonHelpImage.setTint(0xfadcaa); this.sound.play(CLICK_SOUND); })
     .on('pointerout', () => { buttonHelpImage.clearTint(); });
 
     const buttonHelpText = new TextLabel(this, 0, height * 0.34, 'Instruções', { fontFamily: 'Comic Sans MS', fontSize: '18px', fill: '#000', align: 'right', padding: 10 }).setOrigin(0.5);

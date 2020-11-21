@@ -18,8 +18,6 @@ export default class InputNameModal extends Phaser.Scene {
         const width = this.scale.width;
         const height = this.scale.height;
 
-        const buttonSound = this.sound.add(CLICK_SOUND, { volume: 0.5 });
-
         this.container = this.add.container(width * 0.5, height * 0.5);
         const panel = this.add.nineslice(0, -10 , width * 0.8, height * 0.9, PANEL_DIALOG, 24).setOrigin(0.5);        
 
@@ -49,7 +47,7 @@ export default class InputNameModal extends Phaser.Scene {
                             .setOrigin(0.5)
                             .setInteractive()
                             .on('pointerdown', () => { this.showMoodQuestionModal(inputText.text), this.sound })
-                            .on('pointerover', () => { buttonImage.setTint(0xfadcaa); buttonSound.play(); })
+                            .on('pointerover', () => { buttonImage.setTint(0xfadcaa); this.sound.play(CLICK_SOUND); })
                             .on('pointerout', () => { buttonImage.clearTint(); });
 
         const buttonText = new TextLabel(this, 0, height * 0.2, 'Continuar', { fontFamily: 'Comic Sans MS', fontSize: '18px', fill: '#000', align: 'right', padding: 10 }).setOrigin(0.5)

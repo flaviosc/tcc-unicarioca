@@ -1,7 +1,9 @@
 import Phaser from 'phaser';
 import UpdateLocalStorageData from '../util/UpdateLocalStorageData';
+import UiImage from '../ui/UiImage';
 
 import ScoreLabel from '../ui/ScoreLabel';
+import SettingsModal from '../modal/SettingsModal';
 
 const SKY = 'sky';
 const MOUNTAIN = 'mointains';
@@ -16,6 +18,8 @@ const PLATFORM_RIGHT = 'platformright';
 const SIGN = 'sign_right';
 const CRATE = 'crate';
 const PANEL_FEEDBACK = 'panel2';
+const BOX_SETTINGS = 'boxsettings';
+const ICON_SETTINGS = 'iconsettings';
 const ARROW_LEFT = 'arrowleft';
 const ARROW_RIGHT = 'arrowright';
 const BUTTON_JUMP = 'buttonjump';
@@ -55,7 +59,7 @@ export default class GameScene extends Phaser.Scene
     platforms;
 
     /** @type {boolean} */
-    isTouch; isRunningToLeft; isRunningToRight; isPlayerJump;
+    isTouch; isRunningToLeft; isRunningToRight; isPlayerJump; isMenuOpen;
 
     characterSelected;
 
@@ -80,6 +84,7 @@ export default class GameScene extends Phaser.Scene
         this.countLevelOneChallenges = 0;
         this.countLevelTwoChallenges = 0;
         this.countLevelThreeChallenges = 0;
+        this.isMenuOpen = false;
     }
     
 	preload()
@@ -97,6 +102,8 @@ export default class GameScene extends Phaser.Scene
         this.load.image(SIGN, 'assets/sign.png');
         this.load.image(CRATE, 'assets/question_box.png');
         this.load.image(PANEL_FEEDBACK, 'assets/panel_2.png');
+        this.load.image(BOX_SETTINGS, 'assets/grey_box.png');
+        this.load.image(ICON_SETTINGS, 'assets/settings_icon.png');
         this.load.image(ARROW_LEFT, 'assets/arrow_left.png');
         this.load.image(ARROW_RIGHT, 'assets/arrow_right.png');
         this.load.image(BUTTON_JUMP, 'assets/button_jump.png');
@@ -124,8 +131,10 @@ export default class GameScene extends Phaser.Scene
         
         this.scale.on('resize', this.resize, this);
 
-        this.add.image(width * 0.5, height * 0.5, SKY)
+        const sky = new UiImage(this, width * 0.5, height * 0.5, SKY)
                 .setScrollFactor(0);
+        
+        this.add.existing(sky);
    
         repeatBackgroundAssets(this, totalWidth, MOUNTAIN, 0.25);
         repeatBackgroundAssets(this, totalWidth, PLATEAU, 0.50);
@@ -135,8 +144,10 @@ export default class GameScene extends Phaser.Scene
         repeatBackgroundAssets(this, totalWidth, PLANTS, 1.25);
 
 
-        this.add.image(25, height - 10, SIGN)
-                .setOrigin(0, 1);
+        const sign = new UiImage(this, 25, height - 10, SIGN)
+                        .setOrigin(0, 1);
+
+        this.add.existing(sign);
         
         this.platforms = this.createPlatforms();
         
@@ -147,7 +158,6 @@ export default class GameScene extends Phaser.Scene
         this.cameras.main.setBounds(0, 0, width * 10, height);
         this.physics.world.setBounds(0, 0, width * 10, height);
 
-        
         this.startModal = this.scene.get('start-modal');
         this.scene.launch('start-modal');
 
@@ -155,13 +165,13 @@ export default class GameScene extends Phaser.Scene
             if(data.scene === 'character-select') {
                 this.playerData = data.playerData;
                 this.scoreLabel = this.createScoreLabel(16, 16, 0, this.playerData.playerName).setScrollFactor(0);
+                this.settingsContainer = this.createSettingsButton(width);
                 this.characterSelected = this.playerData.playerCharacter;
                 this.player = this.createPlayer(this.characterSelected);
                 this.physics.add.collider(this.player, this.ground);
                 this.physics.add.collider(this.player, this.platforms);
                 this.physics.add.overlap(this.player, this.groupOneChallenges, this.collectBox, null, this);
                 this.cameras.main.startFollow(this.player, false, 0.1, 0.1);
-                this.showStoryModal(this.characterSelected);
                 this.gameSoundtrack = this.sound.add(GAME_SOUNDTRACK, { loop: true, volume: 0.5 });
                 this.gameSoundtrack.play();
             }
@@ -342,7 +352,7 @@ export default class GameScene extends Phaser.Scene
     }
 
     createScoreLabel(x, y, text, playerName) {
-        const panel = this.add.nineslice(x - 5, y - 5, 350, 50, 'panel2', 24).setScrollFactor(0);
+        const panel = this.add.nineslice(x - 5, y - 5, 350, 50, PANEL_FEEDBACK, 24).setScrollFactor(0);
 
         const style = { fontSize: '38px', fill: '#000', fontStyle: 'bold' };
         const label = new ScoreLabel(this, x, y, text, playerName, style);
@@ -350,6 +360,24 @@ export default class GameScene extends Phaser.Scene
         this.add.existing(panel);
         this.add.existing(label);
         return label;
+    }
+
+    createSettingsButton(width) {
+        const settingsButtonContainer = this.add.container(width - 10, 0);
+        const settingsBox = this.add.nineslice(0, 10, 50, 51, BOX_SETTINGS, 14)
+                              .setScrollFactor(0);
+        const settingsBoxIcon = new UiImage(this, 25, 35, ICON_SETTINGS)
+                              .setScrollFactor(0);
+
+        settingsButtonContainer.add(settingsBox);
+        settingsButtonContainer.add(settingsBoxIcon);
+
+        settingsBox.setInteractive()
+                         .on('pointerdown', () => { this.toggleSettingsMenu(); })
+                         .on('pointerover', () => { settingsBox.setTint(0xd9d8d7); this.sound.play(CLICK_SOUND);})
+                         .on('pointerout', () => { settingsBox.clearTint(); })
+
+        this.add.existing(settingsButtonContainer);
     }
 
     updateScore(points) {
@@ -367,14 +395,6 @@ export default class GameScene extends Phaser.Scene
             this.isTouch = true;
         }
     }
-
-    showStoryModal(character) {
-        setTimeout(() => {
-            this.scene.pause();
-            this.storyModal = this.scene.get('story-modal');
-            this.scene.launch('story-modal', { characterSelected: character });
-        }, 1700);
-    }  
 
     checkLevelGame() {
         if(this.groupOneChallenges && this.groupTwoChallenges && this.groupThreeChallenges) {
@@ -407,6 +427,16 @@ export default class GameScene extends Phaser.Scene
     updateLocalStorage(points) {  
         this.playerData.playerPoints = points;
         const updateData = new UpdateLocalStorageData(this.playerData).setData();
+    }
+
+    toggleSettingsMenu(){
+        this.isMenuOpen = !this.isMenuOpen;
+
+        if(this.isMenuOpen == true) {
+            this.scene.add('settings-modal', SettingsModal, true);
+        } else {
+            this.scene.remove('settings-modal');
+        }
     }
 
     resize (gameSize) {
