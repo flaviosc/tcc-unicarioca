@@ -46,7 +46,7 @@ export default class InputNameModal extends Phaser.Scene {
         const buttonImage = new UiImage(this, 0, height * 0.2, 'button')
                             .setOrigin(0.5)
                             .setInteractive()
-                            .on('pointerdown', () => { this.showMoodQuestionModal(inputText.text), this.sound })
+                            .on('pointerdown', () => { this.checkNameExists(inputText.text), this.sound })
                             .on('pointerover', () => { buttonImage.setTint(0xfadcaa); this.sound.play(CLICK_SOUND); })
                             .on('pointerout', () => { buttonImage.clearTint(); });
 
@@ -68,6 +68,17 @@ export default class InputNameModal extends Phaser.Scene {
         return text;
     }
 
+
+    checkNameExists(text) {
+        if(text.length == 0 || text === '') {
+            const labelText = new TextLabel(this, 0, 45, 'Por favor, digite seu nome!', { fontFamily: 'Comic Sans MS', fontSize: '18px', fill: '#000', align: 'center', padding: 10, wordWrap: { width: 400 } }).setOrigin(0.5);
+            this.container.add(labelText);
+        } else {
+            this.showMoodQuestionModal(text);
+        }
+        return true;
+    }
+    
     showMoodQuestionModal(text) {
         const playerData = this.updateLocalStorage(text);
 
