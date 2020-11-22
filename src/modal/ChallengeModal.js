@@ -44,12 +44,12 @@ const CHALLENGE_ONE_TEXT =
 Como você acha que ele está se sentindo?`;
 
 const CHALLENGE_TWO_TEXT = 
-`Roberto viu algo que não gostou muito...
+`Enquanto estava passando pela rua, Roberto se assustou com algo que viu...
  Ele está se sentindo: `;
 
 const CHALLENGE_THREE_TEXT = 
-`Matheus ficou sabendo de uma novidade...
- Como você acha que ele se sentiu? `;
+`Matheus ficou sabendo que irá passar as férias na casa dos avós. Como 
+ você acha que ele se sentiu? `;
 
 const CHALLENGE_FOUR_TEXT = 
 `Durante o horário do recreio, Victor e Benjamin decidiram brincar com o boneco de pelúcia. Victor disse que viu e pegou o boneco primeiro, mas Benjamin não aceitou e os dois começaram a disputar. 
@@ -74,11 +74,11 @@ const POSITIVE_FEEDBACK_CHALLENGE_ONE =
 `;
 
 const POSITIVE_FEEDBACK_CHALLENGE_TWO = 
-`Ele tem muito medo de cachorros, e viu um enquanto andava pela rua...
-`;
+`Ele tem muito medo de cachorros, 
+ e viu um enquanto andava pela rua...`;
 
 const POSITIVE_FEEDBACK_CHALLENGE_THREE = 
-`Ele vai passar as férias na casa dos avós, e ele adora!
+`Ele adora visitar os avós!
 `;
 
 const POSITIVE_FEEDBACK_CHALLENGE_FOUR = 
@@ -103,13 +103,12 @@ const NEGATIVE_FEEDBACK_HAPPY =
 `;
 
 const NEGATIVE_FEEDBACK_ANGRY = 
-`Já vi outros amiguinhos com raiva, e esse nosso amiguinho não parece estar assim...  
- Tem certeza que ele está com raiva?
-`;
+`Tem certeza? Já vi outros amiguinhos com raiva, e esse
+ não parece estar assim...`;
 
 const NEGATIVE_FEEDBACK_SAD = 
-`Não sei... Ele não parece estar triste...
-`;
+`Não sei... 
+Ele não parece estar triste...`;
 
 const NEGATIVE_FEEDBACK_DISGUSTED = 
 `Será mesmo que ele sentiu nojo?
@@ -190,7 +189,7 @@ export default class ChallengeModal extends Phaser.Scene {
         const width = this.scale.width;
         const height = this.scale.height;
 
-        this.container = this.add.container(width * 0.5, height * 0.5);
+        this.container = this.add.container(width * 0.5, height + 20);
         const panel = this.add.nineslice(0, -10 , width * 0.8, height * 0.9, PANEL_DIALOG, 24).setOrigin(0.5);        
         this.container.add(panel);
 
@@ -199,10 +198,12 @@ export default class ChallengeModal extends Phaser.Scene {
         this.questionSound = this.sound.add(QUESTION_SOUND, { loop: true, volume: 0.5 });
         this.questionSound.play();
 
-        this.events.on('resume', (scene, data) => {
-            this.questionSound.play();
-        });
-
+        this.tweens.add({
+            targets: this.container,
+            y: height * 0.5,
+            duration: 300,
+            ease: Phaser.Math.Easing.Sine.InOut
+        });  
     }
 
     loadModalBody(width, height){
@@ -241,20 +242,20 @@ export default class ChallengeModal extends Phaser.Scene {
     }
 
     showChallengeOne(width, height) {
-        const challengeImage = this.add.nineslice(0, -height * 0.20, 200, 280, SAD_CHILDREN_IMAGE, 24).setOrigin(0.5);    
-        this.contentText = this.createContentText(0, 30, width, CHALLENGE_ONE_TEXT).setOrigin(0.5);    
+        const challengeImage = this.add.nineslice(0, -height * 0.30, 180, 210, SAD_CHILDREN_IMAGE, 24).setOrigin(0.5);    
+        this.contentText = this.createContentText(0, 0, width, CHALLENGE_ONE_TEXT, '26px').setOrigin(0.5);    
 
-        const buttonLeft = this.add.nineslice(-200, 160, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
-        const btnLeftText = this.createButtonText(-220, 160, HAPPY_BUTTON_TEXT).setOrigin(0.5);
-        const btnLeftIcon = this.add.nineslice(-150, 160, 25, 25, HAPPY_EMOTION_KEY, 0).setOrigin(0.5);    
+        const buttonLeft = this.add.nineslice(0, 140, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
+        const btnLeftText = this.createButtonText(-20, 140, HAPPY_BUTTON_TEXT).setOrigin(0.5);
+        const btnLeftIcon = this.add.nineslice(40, 140, 25, 25, HAPPY_EMOTION_KEY, 0).setOrigin(0.5);    
         
-        const buttonMiddle = this.add.nineslice(0, 160, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
-        const btnMiddleText = this.createButtonText(-30, 160, SAD_BUTTON_TEXT).setOrigin(0.5);
-        const btnMiddleIcon = this.add.nineslice(50, 160, 25, 25, SAD_EMOTION_KEY, 0).setOrigin(0.5);    
+        const buttonMiddle = this.add.nineslice(0, 200, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
+        const btnMiddleText = this.createButtonText(-20, 200, SAD_BUTTON_TEXT).setOrigin(0.5);
+        const btnMiddleIcon = this.add.nineslice(40, 200, 25, 25, SAD_EMOTION_KEY, 0).setOrigin(0.5);    
 
-        const buttonRight =  this.add.nineslice(200, 160, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
-        const btnRightText = this.createButtonText(180, 160, ANGRY_BUTTON_TEXT).setOrigin(0.5);
-        const btnRightIcon = this.add.nineslice(260, 160, 25, 25, ANGRY_EMOTION_KEY, 0).setOrigin(0.5);    
+        const buttonRight =  this.add.nineslice(0, 260, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
+        const btnRightText = this.createButtonText(-20, 260, ANGRY_BUTTON_TEXT).setOrigin(0.5);
+        const btnRightIcon = this.add.nineslice(40, 260, 25, 25, ANGRY_EMOTION_KEY, 0).setOrigin(0.5);    
 
         this.container.add(challengeImage);
         this.container.add(this.contentText);
@@ -272,34 +273,34 @@ export default class ChallengeModal extends Phaser.Scene {
         this.container.add(btnRightIcon);
 
         buttonLeft.setInteractive()
-                  .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_HAPPY, this.showFeedbackModal(false, buttonLeft); buttonLeft.setTint(0xff0000)})
+                  .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_HAPPY, this.showFeedbackModal(false); buttonLeft.setTint(0xff0000)})
                   .on('pointerover', () => { buttonLeft.setTint(0xfadcaa); this.sound.play(CLICK_SOUND);  })
                   .on('pointerout', () => { buttonLeft.clearTint(); })
         buttonMiddle.setInteractive()
-                    .on('pointerdown', () => { this.feedbackText = POSITIVE_FEEDBACK_CHALLENGE_ONE, this.showFeedbackModal(true, buttonMiddle); buttonMiddle.setTint(0xff00) })
+                    .on('pointerdown', () => { this.feedbackText = POSITIVE_FEEDBACK_CHALLENGE_ONE, this.showFeedbackModal(true); buttonMiddle.setTint(0xff00) })
                     .on('pointerover', () => { buttonMiddle.setTint(0xfadcaa); this.sound.play(CLICK_SOUND);})
                     .on('pointerout', () => { buttonMiddle.clearTint(); })
         buttonRight.setInteractive()
-                   .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_ANGRY, this.showFeedbackModal(false, buttonRight); buttonRight.setTint(0xff0000) })
+                   .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_ANGRY, this.showFeedbackModal(false); buttonRight.setTint(0xff0000) })
                    .on('pointerover', () => { buttonRight.setTint(0xfadcaa); this.sound.play(CLICK_SOUND);})
                    .on('pointerout', () => { buttonRight.clearTint(); })
     }
 
     showChallengeTwo(width, height) {
-        const challengeImage = this.add.nineslice(0, -height * 0.20, 200, 280, FEAR_CHILDREN_IMAGE, 0).setOrigin(0.5);    
-        this.contentText = this.createContentText(0, 30, width, CHALLENGE_TWO_TEXT).setOrigin(0.5);    
+        const challengeImage = this.add.nineslice(0, -height * 0.30, 180, 210, FEAR_CHILDREN_IMAGE, 0).setOrigin(0.5);    
+        this.contentText = this.createContentText(0, 0, width, CHALLENGE_TWO_TEXT,'26px').setOrigin(0.5);    
 
-        const buttonLeft = this.add.nineslice(-200, 160, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
-        const btnLeftText = this.createButtonText(-220, 160, FEAR_BUTTON_TEXT).setOrigin(0.5);
-        const btnLeftIcon = this.add.nineslice(-150, 160, 25, 25, FEAR_EMOTION_KEY, 0).setOrigin(0.5);    
+        const buttonLeft = this.add.nineslice(0, 140, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
+        const btnLeftText = this.createButtonText(-20, 140, FEAR_BUTTON_TEXT).setOrigin(0.5);
+        const btnLeftIcon = this.add.nineslice(40, 140, 25, 25, FEAR_EMOTION_KEY, 0).setOrigin(0.5);    
         
-        const buttonMiddle = this.add.nineslice(0, 160, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
-        const btnMiddleText = this.createButtonText(-30, 160, ANGRY_BUTTON_TEXT).setOrigin(0.5);
-        const btnMiddleIcon = this.add.nineslice(50, 160, 25, 25, ANGRY_EMOTION_KEY, 0).setOrigin(0.5);    
+        const buttonMiddle = this.add.nineslice(0, 200, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
+        const btnMiddleText = this.createButtonText(-20, 200, ANGRY_BUTTON_TEXT).setOrigin(0.5);
+        const btnMiddleIcon = this.add.nineslice(40, 200, 25, 25, ANGRY_EMOTION_KEY, 0).setOrigin(0.5);    
 
-        const buttonRight =  this.add.nineslice(200, 160, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
-        const btnRightText = this.createButtonText(180, 160, SAD_BUTTON_TEXT).setOrigin(0.5);
-        const btnRightIcon = this.add.nineslice(260, 160, 25, 25, SAD_EMOTION_KEY, 0).setOrigin(0.5);    
+        const buttonRight =  this.add.nineslice(0, 260, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
+        const btnRightText = this.createButtonText(-20, 260, SAD_BUTTON_TEXT).setOrigin(0.5);
+        const btnRightIcon = this.add.nineslice(40, 260, 25, 25, SAD_EMOTION_KEY, 0).setOrigin(0.5);    
 
         this.container.add(challengeImage);
         this.container.add(this.contentText);
@@ -317,34 +318,34 @@ export default class ChallengeModal extends Phaser.Scene {
         this.container.add(btnRightIcon);
 
         buttonLeft.setInteractive()
-                  .on('pointerdown', () => { this.feedbackText = POSITIVE_FEEDBACK_CHALLENGE_TWO, this.showFeedbackModal(true, buttonLeft); buttonLeft.setTint(0xff00)})
+                  .on('pointerdown', () => { this.feedbackText = POSITIVE_FEEDBACK_CHALLENGE_TWO, this.showFeedbackModal(true); buttonLeft.setTint(0xff00)})
                   .on('pointerover', () => { buttonLeft.setTint(0xfadcaa); this.sound.play(CLICK_SOUND);})
                   .on('pointerout', () => { buttonLeft.clearTint(); })
         buttonMiddle.setInteractive()
-                    .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_ANGRY, this.showFeedbackModal(false, buttonMiddle); buttonMiddle.setTint(0xff0000) })
+                    .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_ANGRY, this.showFeedbackModal(false); buttonMiddle.setTint(0xff0000) })
                     .on('pointerover', () => { buttonMiddle.setTint(0xfadcaa); this.sound.play(CLICK_SOUND);})
                     .on('pointerout', () => { buttonMiddle.clearTint(); })
         buttonRight.setInteractive()
-                   .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_SAD, this.showFeedbackModal(false, buttonRight); buttonRight.setTint(0xff0000) })
+                   .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_SAD, this.showFeedbackModal(false); buttonRight.setTint(0xff0000) })
                    .on('pointerover', () => { buttonRight.setTint(0xfadcaa); this.sound.play(CLICK_SOUND);})
                    .on('pointerout', () => { buttonRight.clearTint(); })
     }
 
     showChallengeThree(width, height) {
-        const challengeImage = this.add.nineslice(0, -height * 0.20, 180, 250, HAPPY_CHILDREN_IMAGE, 0).setOrigin(0.5);    
-        this.contentText = this.createContentText(0, 35, width, CHALLENGE_THREE_TEXT).setOrigin(0.5);    
+        const challengeImage = this.add.nineslice(0, -height * 0.30, 180, 210, HAPPY_CHILDREN_IMAGE, 0).setOrigin(0.5);    
+        this.contentText = this.createContentText(0, 0, width, CHALLENGE_THREE_TEXT, '26px').setOrigin(0.5);    
 
-        const buttonLeft = this.add.nineslice(-200, 160, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
-        const btnLeftText = this.createButtonText(-220, 160, ANGRY_BUTTON_TEXT).setOrigin(0.5);
-        const btnLeftIcon = this.add.nineslice(-150, 160, 25, 25, ANGRY_EMOTION_KEY, 0).setOrigin(0.5);    
+        const buttonLeft = this.add.nineslice(0, 140, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
+        const btnLeftText = this.createButtonText(-20, 140, ANGRY_BUTTON_TEXT).setOrigin(0.5);
+        const btnLeftIcon = this.add.nineslice(40, 140, 25, 25, ANGRY_EMOTION_KEY, 0).setOrigin(0.5);    
         
-        const buttonMiddle = this.add.nineslice(0, 160, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
-        const btnMiddleText = this.createButtonText(-30, 160, DISGUSTED_BUTTON_TEXT).setOrigin(0.5);
-        const btnMiddleIcon = this.add.nineslice(50, 160, 25, 25, DISGUSTED_EMOTION_KEY, 0).setOrigin(0.5);    
+        const buttonMiddle = this.add.nineslice(0, 200, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
+        const btnMiddleText = this.createButtonText(-20, 200, DISGUSTED_BUTTON_TEXT).setOrigin(0.5);
+        const btnMiddleIcon = this.add.nineslice(40, 200, 25, 25, DISGUSTED_EMOTION_KEY, 0).setOrigin(0.5);    
 
-        const buttonRight =  this.add.nineslice(200, 160, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
-        const btnRightText = this.createButtonText(180, 160, HAPPY_BUTTON_TEXT).setOrigin(0.5);
-        const btnRightIcon = this.add.nineslice(260, 160, 25, 25, HAPPY_EMOTION_KEY, 0).setOrigin(0.5);    
+        const buttonRight =  this.add.nineslice(0, 260, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
+        const btnRightText = this.createButtonText(-20, 260, HAPPY_BUTTON_TEXT).setOrigin(0.5);
+        const btnRightIcon = this.add.nineslice(40, 260, 25, 25, HAPPY_EMOTION_KEY, 0).setOrigin(0.5);    
 
         this.container.add(challengeImage);
         this.container.add(this.contentText);
@@ -362,15 +363,15 @@ export default class ChallengeModal extends Phaser.Scene {
         this.container.add(btnRightIcon);
 
         buttonLeft.setInteractive()
-                  .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_ANGRY, this.showFeedbackModal(false, buttonLeft); buttonLeft.setTint(0xff0000)})
+                  .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_ANGRY, this.showFeedbackModal(false); buttonLeft.setTint(0xff0000)})
                   .on('pointerover', () => { buttonLeft.setTint(0xfadcaa); this.sound.play(CLICK_SOUND);})
                   .on('pointerout', () => { buttonLeft.clearTint(); })
         buttonMiddle.setInteractive()
-                    .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_DISGUSTED, this.showFeedbackModal(false, buttonMiddle); buttonMiddle.setTint(0xff0000) })
+                    .on('pointerdown', () => { this.feedbackText = NEGATIVE_FEEDBACK_DISGUSTED, this.showFeedbackModal(false); buttonMiddle.setTint(0xff0000) })
                     .on('pointerover', () => { buttonMiddle.setTint(0xfadcaa); this.sound.play(CLICK_SOUND);})
                     .on('pointerout', () => { buttonMiddle.clearTint(); })
         buttonRight.setInteractive()
-                   .on('pointerdown', () => { this.feedbackText = POSITIVE_FEEDBACK_CHALLENGE_THREE, this.showFeedbackModal(true, buttonRight); buttonRight.setTint(0xff00) })
+                   .on('pointerdown', () => { this.feedbackText = POSITIVE_FEEDBACK_CHALLENGE_THREE, this.showFeedbackModal(true); buttonRight.setTint(0xff00) })
                    .on('pointerover', () => { buttonRight.setTint(0xfadcaa); this.sound.play(CLICK_SOUND);})
                    .on('pointerout', () => { buttonRight.clearTint(); })
     }
@@ -533,7 +534,7 @@ export default class ChallengeModal extends Phaser.Scene {
                    .on('pointerout', () => { thirdOption.clearTint(); })
     }
 
-    createContentText(x, y, width, text, wordWrap, fontSize) {
+    createContentText(x, y, width, text, fontSize, wordWrap,) {
         if(wordWrap == undefined) {
             wordWrap = width / 2;
         }
@@ -573,11 +574,20 @@ export default class ChallengeModal extends Phaser.Scene {
             this.setScenePoints();
         }
     }
+
     showFeedbackModal(isCorrectAnswer) 
     {
         this.checkAnswer(isCorrectAnswer);
-        this.questionSound.stop();
+        this.questionSound.pause();
         this.scene.launch('feedback-answer-modal', { correctAnswer: isCorrectAnswer, feedbackText: this.feedbackText, lastChallenge: this.lastChallenge, character: this.charactedSelected, scenePoints: this.scenePoints });
-        this.scene.pause();
+    }
+
+    hide(height) {
+        this.tweens.add({
+            targets: this.container,
+            y: height * 1.5,
+            duration: 300,
+            ease: Phaser.Math.Easing.Sine.InOut
+        });  
     }
 }

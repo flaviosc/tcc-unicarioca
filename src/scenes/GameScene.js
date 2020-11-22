@@ -343,7 +343,7 @@ export default class GameScene extends Phaser.Scene
 
     showChallangeScene(box) {
        let challangeScene = this.scene.get('challenge-modal');
-       this.gameSoundtrack.stop();
+       this.gameSoundtrack.pause();
        this.scene.launch('challenge-modal', { gameLevel: this.gameLevel, challengeId: box.name, character: this.characterSelected });
     }
 
@@ -422,10 +422,6 @@ export default class GameScene extends Phaser.Scene
             this.physics.add.collider(this.groupThreeChallenges, this.ground);
             this.physics.add.overlap(this.player, this.groupThreeChallenges, this.collectBox, null, this);
         }
-    }
-
-    resumeAudio() {
-        this.gameSoundtrack.play();
     }
 
     updateLocalStorage(points) {  
