@@ -86,6 +86,7 @@ export default class FeedbackAnswerModal extends Phaser.Scene {
                     .on('pointerout', () => { okButton.clearTint(); })
 
             this.successSound = this.sound.add(SUCCESS_SOUND).play();
+            this.sound.stopByKey(QUESTION_SOUND);
 
         } else {
             const incorrectImage = this.add.nineslice(5, -110, 50, 50,  INCORRECT, 0).setOrigin(0.5);
@@ -123,13 +124,14 @@ export default class FeedbackAnswerModal extends Phaser.Scene {
 
         if(this.lastChallenge == true) {
             gameScene.updateScore(this.scenePoints);
-            challengeModal.scene.stop();
+            challengeModal.questionSound.stop();
+            challengeModal.hide(height);
             this.scene.start('end-game-modal', { scene: 'feedback-answer-modal', character: this.characterSelected });
             return;
         }
 
+        challengeModal.scene.resume();
         challengeModal.hide(height);
-        challengeModal.sound.stopAll();
         this.scene.stop();
         
         this.scene.resume('game-scene', { scene: 'feedback-answer-modal' });
@@ -141,8 +143,7 @@ export default class FeedbackAnswerModal extends Phaser.Scene {
 
     returnToChallenge() {
         const challengeModal = this.scene.get('challenge-modal');
-        
+        challengeModal.scene.resume();
         this.scene.stop('feedback-answer-modal');
-        challengeModal.questionSound.resume();
     }
 }

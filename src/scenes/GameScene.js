@@ -286,6 +286,10 @@ export default class GameScene extends Phaser.Scene
         platforms.create((initialX * 8.6) + 128, height * 0.70, PLATFORM_MIDDLE);
         platforms.create((initialX * 8.6) + 256, height * 0.70, PLATFORM_RIGHT);
 
+        platforms.create(initialX * 10, height * 0.70, PLATFORM_LEFT);
+        platforms.create((initialX * 10) + 128, height * 0.70, PLATFORM_MIDDLE);
+        platforms.create((initialX * 10) + 256, height * 0.70, PLATFORM_RIGHT);
+
         return platforms;
     }
 
@@ -325,7 +329,7 @@ export default class GameScene extends Phaser.Scene
             crateObject.name = `CRATE_${i}`
             crate.add(crateObject);
 
-            horizontalSpacing += crateObject.width * 8;
+            horizontalSpacing += crateObject.width * 8.5;
         }
         
 
@@ -417,7 +421,7 @@ export default class GameScene extends Phaser.Scene
         if(this.groupTwoChallenges != undefined && this.groupTwoChallenges.countActive(true) === 0) {
             this.gameLevel = 3;
 
-            this.groupThreeChallenges = this.createBoxChallenges(this.player.x + 400, 6, 1);
+            this.groupThreeChallenges = this.createBoxChallenges(this.player.x + 400, 6, 3);
             this.physics.add.collider(this.groupThreeChallenges, this.platforms);
             this.physics.add.collider(this.groupThreeChallenges, this.ground);
             this.physics.add.overlap(this.player, this.groupThreeChallenges, this.collectBox, null, this);
