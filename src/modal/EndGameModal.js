@@ -40,8 +40,6 @@ export default class EndGameModal extends Phaser.Scene {
     create() {
         const width = this.scale.width;
         const height = this.scale.height;
-    
-        const buttonSound = this.sound.add(CLICK_SOUND, { volume: 0.5 });
 
         this.container = this.add.container(width * 0.5, height * 0.5);
         const panel = this.add.nineslice(0, -10 , width * 0.8, height * 0.9, PANEL_DIALOG, 24).setOrigin(0.5);        
@@ -58,16 +56,16 @@ export default class EndGameModal extends Phaser.Scene {
 
         let finalImagePlayer;
         if(this.characterSelected == GIRL_PLAYER) {
-            finalImagePlayer = new UiImage(this, 0, -height * 0.17, GIRL_PLAYER_ENDGAME)
+            finalImagePlayer = new UiImage(this, 0, -height * 0.20, GIRL_PLAYER_ENDGAME)
             .setOrigin(0.5);
         } else if (this.characterSelected == BOY_PLAYER) {
-            finalImagePlayer = new UiImage(this, 0, -height * 0.17, BOY_PLAYER_ENDGAME)
+            finalImagePlayer = new UiImage(this, 0, -height * 0.20, BOY_PLAYER_ENDGAME)
             .setOrigin(0.5);
         }
 
         finalButton.setInteractive()
                   .on('pointerdown', () => { this.restartGame(); })
-                  .on('pointerover', () => { finalButton.setTint(0xfadcaa); buttonSound.play();  })
+                  .on('pointerover', () => { finalButton.setTint(0xfadcaa); this.sound.play(CLICK_SOUND);  })
                   .on('pointerout', () => { finalButton.clearTint(); })
 
         this.container.add(headerText);

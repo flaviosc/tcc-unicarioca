@@ -23,8 +23,6 @@ export default class CharacterSelectModal extends Phaser.Scene {
     create() {
         const width = this.scale.width;
         const height = this.scale.height;
-
-        const buttonSound = this.sound.add(CLICK_SOUND, { volume: 0.5 });
     
         this.container = this.add.container(width * 0.5, height * 0.5);
         const panel = this.add.nineslice(0, -10 , width * 0.8, height * 0.9, PANEL_DIALOG, 24).setOrigin(0.5);        
@@ -35,14 +33,14 @@ export default class CharacterSelectModal extends Phaser.Scene {
                                 .setOrigin(0.5)
                                 .setInteractive()
                                 .on('pointerdown', () => { this.startGame(GIRL_PLAYER) })
-                                .on('pointerover', () => { girlPlayer.setTint(0xf4e7d0); girlPlayer.displayWidth = 90; girlPlayer.displayHeight = 120; buttonSound.play(); })
+                                .on('pointerover', () => { girlPlayer.setTint(0xf4e7d0); girlPlayer.displayWidth = 90; girlPlayer.displayHeight = 120; this.sound.play(CLICK_SOUND); })
                                 .on('pointerout', () => { girlPlayer.clearTint(); girlPlayer.displayWidth = 80; girlPlayer.displayHeight = 110;});;
 
         const boyPlayer = new UiImage(this, width * 0.1, 0, BOY_PLAYER)
                                 .setOrigin(0.5)
                                 .setInteractive()
                                 .on('pointerdown', () => { this.startGame(BOY_PLAYER); })
-                                .on('pointerover', () => { boyPlayer.setTint(0xf4e7d0); boyPlayer.displayWidth = 90; boyPlayer.displayHeight = 120; buttonSound.play();})
+                                .on('pointerover', () => { boyPlayer.setTint(0xf4e7d0); boyPlayer.displayWidth = 90; boyPlayer.displayHeight = 120; this.sound.play(CLICK_SOUND);})
                                 .on('pointerout', () => { boyPlayer.clearTint(); boyPlayer.displayWidth = 80; boyPlayer.displayHeight = 110; });
 
         this.container.add(panel);
