@@ -4,6 +4,7 @@ import UiImage from '../ui/UiImage';
 
 import ScoreLabel from '../ui/ScoreLabel';
 import SettingsModal from '../modal/SettingsModal';
+import LevelModal from '../modal/LevelModal';
 
 const SKY = 'sky';
 const MOUNTAIN = 'mointains';
@@ -175,6 +176,8 @@ export default class GameScene extends Phaser.Scene
                 this.cameras.main.startFollow(this.player, false, 0.1, 0.1);
                 this.gameSoundtrack = this.sound.add(GAME_SOUNDTRACK, { loop: true, volume: 0.5 });
                 this.gameSoundtrack.play();
+
+                this.scene.add('level-modal', LevelModal , true, { gameLevel: this.gameLevel, characterSelected: this.characterSelected });
             }
 
             this.resetCursors();
@@ -211,7 +214,6 @@ export default class GameScene extends Phaser.Scene
         this.settingsScene.scene.start();
 
         this.scene.pause();
-        
     }
 
     update() {
@@ -329,7 +331,7 @@ export default class GameScene extends Phaser.Scene
             crateObject.name = `CRATE_${i}`
             crate.add(crateObject);
 
-            horizontalSpacing += crateObject.width * 8.5;
+            horizontalSpacing += crateObject.width * 8.3;
         }
         
 
@@ -349,6 +351,11 @@ export default class GameScene extends Phaser.Scene
        let challangeScene = this.scene.get('challenge-modal');
        this.gameSoundtrack.pause();
        this.scene.launch('challenge-modal', { gameLevel: this.gameLevel, challengeId: box.name, character: this.characterSelected });
+    }
+
+    showLevelModal() {
+        let challangeScene = this.scene.get('level-modal');
+        this.scene.launch('level-modal', { gameLevel: this.gameLevel, characterSelected: this.characterSelected });
     }
 
     resetCursors() {
@@ -411,6 +418,7 @@ export default class GameScene extends Phaser.Scene
 
         if(this.groupTwoChallenges == undefined && this.groupOneChallenges.countActive(true) === 0) {
             this.gameLevel = 2;
+            this.showLevelModal();
 
             this.groupTwoChallenges = this.createBoxChallenges(this.player.x + 400, 3, 3);
             this.physics.add.collider(this.groupTwoChallenges, this.platforms);
@@ -420,6 +428,7 @@ export default class GameScene extends Phaser.Scene
 
         if(this.groupTwoChallenges != undefined && this.groupTwoChallenges.countActive(true) === 0) {
             this.gameLevel = 3;
+            this.showLevelModal();
 
             this.groupThreeChallenges = this.createBoxChallenges(this.player.x + 400, 6, 3);
             this.physics.add.collider(this.groupThreeChallenges, this.platforms);
@@ -434,7 +443,6 @@ export default class GameScene extends Phaser.Scene
     }
 
     toggleSettingsMenu(){
-        
         this.isMenuOpen = !this.isMenuOpen;
 
         if(this.isMenuOpen == true) {

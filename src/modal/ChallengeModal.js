@@ -283,7 +283,7 @@ export default class ChallengeModal extends Phaser.Scene {
     }
 
     showChallengeOne(width, height) {
-        const challengeImage = this.add.nineslice(0, -height * 0.30, 180, 210, SAD_CHILDREN_IMAGE, 24).setOrigin(0.5);    
+        const challengeImage = this.add.nineslice(0, -height * 0.25, 180, 230, SAD_CHILDREN_IMAGE, 24).setOrigin(0.5);    
         this.contentText = this.createContentText(0, 0, width, CHALLENGE_ONE_TEXT, '26px').setOrigin(0.5);    
 
         const buttonLeft = this.add.nineslice(0, 140, 190, 45, BUTTON_KEY, 24).setOrigin(0.5);    
