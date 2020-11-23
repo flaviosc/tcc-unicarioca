@@ -94,6 +94,6 @@ export default class LevelModal extends Phaser.Scene
             duration: 800,
             ease: Phaser.Math.Easing.Sine.InOut
           });  
-    }, 4000);
+    }, 3500);
   }
 }
