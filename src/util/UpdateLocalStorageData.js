@@ -9,8 +9,8 @@ export default class UpdateLocalStorageData {
     }
 
     getData() {
-        const data = JSON.parse(localStorage.getItem(key));
-        return data.sort((item1, item2) => item1.playerPoints < item2.playerPoints ? 1 : -1);
+        const data = JSON.parse(localStorage.getItem(key)); 
+        return this.sortData(data);
     }
 
     setData() {
@@ -34,5 +34,11 @@ export default class UpdateLocalStorageData {
             this.rankingArray.push(this.data);
             localStorage.setItem(key, JSON.stringify(this.rankingArray))
         }
+    }
+
+    sortData(data){
+        if(data){ 
+            data.sort((item1, item2) => item1.playerPoints < item2.playerPoints ? 1 : -1);
+        } 
     }
 }
