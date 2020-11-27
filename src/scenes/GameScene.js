@@ -402,11 +402,9 @@ export default class GameScene extends Phaser.Scene
 
     checkDevice() {
         if (this.sys.game.device.os.desktop){
-            console.log("desktop");
             this.isTouch = false;
         }
         else{
-            console.log("mobile");
             this.isTouch = true;
         }
     }
