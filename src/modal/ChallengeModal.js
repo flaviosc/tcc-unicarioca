@@ -286,15 +286,15 @@ export default class ChallengeModal extends Phaser.Scene {
         const challengeImage = this.add.nineslice(0, -height * 0.25, 180, 230, SAD_CHILDREN_IMAGE, 24).setOrigin(0.5);    
         this.contentText = this.createContentText(0, 0, width, CHALLENGE_ONE_TEXT, '26px').setOrigin(0.5);    
 
-        const buttonLeft = this.add.nineslice(0, 140, 190, 45, BUTTON_KEY, 24).setOrigin(0.5);    
+        const buttonLeft = this.add.nineslice(0, 140, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
         const btnLeftText = this.createButtonText(-20, 140, HAPPY_BUTTON_TEXT).setOrigin(0.5);
         const btnLeftIcon = this.add.nineslice(40, 140, 25, 25, HAPPY_EMOTION_KEY, 0).setOrigin(0.5);    
         
-        const buttonMiddle = this.add.nineslice(0, 200, 190, 45, BUTTON_KEY, 24).setOrigin(0.5);    
+        const buttonMiddle = this.add.nineslice(0, 200, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
         const btnMiddleText = this.createButtonText(-20, 200, SAD_BUTTON_TEXT).setOrigin(0.5);
         const btnMiddleIcon = this.add.nineslice(40, 200, 25, 25, SAD_EMOTION_KEY, 0).setOrigin(0.5);    
 
-        const buttonRight =  this.add.nineslice(0, 260, 190, 45, BUTTON_KEY, 24).setOrigin(0.5);    
+        const buttonRight =  this.add.nineslice(0, 260, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
         const btnRightText = this.createButtonText(-20, 260, ANGRY_BUTTON_TEXT).setOrigin(0.5);
         const btnRightIcon = this.add.nineslice(40, 260, 25, 25, ANGRY_EMOTION_KEY, 0).setOrigin(0.5);    
 
@@ -331,15 +331,15 @@ export default class ChallengeModal extends Phaser.Scene {
         const challengeImage = this.add.nineslice(0, -height * 0.30, 180, 210, FEAR_CHILDREN_IMAGE, 0).setOrigin(0.5);    
         this.contentText = this.createContentText(0, 0, width, CHALLENGE_TWO_TEXT,'26px').setOrigin(0.5);    
 
-        const buttonLeft = this.add.nineslice(0, 140, 190, 45, BUTTON_KEY, 24).setOrigin(0.5);    
+        const buttonLeft = this.add.nineslice(0, 140, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
         const btnLeftText = this.createButtonText(-20, 140, FEAR_BUTTON_TEXT).setOrigin(0.5);
         const btnLeftIcon = this.add.nineslice(40, 140, 25, 25, FEAR_EMOTION_KEY, 0).setOrigin(0.5);    
         
-        const buttonMiddle = this.add.nineslice(0, 200, 190, 45, BUTTON_KEY, 24).setOrigin(0.5);    
+        const buttonMiddle = this.add.nineslice(0, 200, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
         const btnMiddleText = this.createButtonText(-20, 200, ANGRY_BUTTON_TEXT).setOrigin(0.5);
         const btnMiddleIcon = this.add.nineslice(40, 200, 25, 25, ANGRY_EMOTION_KEY, 0).setOrigin(0.5);    
 
-        const buttonRight =  this.add.nineslice(0, 260, 190, 45, BUTTON_KEY, 24).setOrigin(0.5);    
+        const buttonRight =  this.add.nineslice(0, 260, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
         const btnRightText = this.createButtonText(-20, 260, SAD_BUTTON_TEXT).setOrigin(0.5);
         const btnRightIcon = this.add.nineslice(40, 260, 25, 25, SAD_EMOTION_KEY, 0).setOrigin(0.5);    
 
@@ -376,15 +376,15 @@ export default class ChallengeModal extends Phaser.Scene {
         const challengeImage = this.add.nineslice(0, -height * 0.30, 180, 210, HAPPY_CHILDREN_IMAGE, 0).setOrigin(0.5);    
         this.contentText = this.createContentText(0, 0, width, CHALLENGE_THREE_TEXT, '26px').setOrigin(0.5);    
 
-        const buttonLeft = this.add.nineslice(0, 140, 190, 45, BUTTON_KEY, 24).setOrigin(0.5);    
+        const buttonLeft = this.add.nineslice(0, 140, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
         const btnLeftText = this.createButtonText(-20, 140, ANGRY_BUTTON_TEXT).setOrigin(0.5);
         const btnLeftIcon = this.add.nineslice(40, 140, 25, 25, ANGRY_EMOTION_KEY, 0).setOrigin(0.5);    
         
-        const buttonMiddle = this.add.nineslice(0, 200, 190, 45, BUTTON_KEY, 24).setOrigin(0.5);    
+        const buttonMiddle = this.add.nineslice(0, 200, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
         const btnMiddleText = this.createButtonText(-20, 200, DISGUSTED_BUTTON_TEXT).setOrigin(0.5);
         const btnMiddleIcon = this.add.nineslice(40, 200, 25, 25, DISGUSTED_EMOTION_KEY, 0).setOrigin(0.5);    
 
-        const buttonRight =  this.add.nineslice(0, 260, 190, 45, BUTTON_KEY, 24).setOrigin(0.5);    
+        const buttonRight =  this.add.nineslice(0, 260, 190, 45, BUTTON_KEY, 0).setOrigin(0.5);    
         const btnRightText = this.createButtonText(-20, 260, HAPPY_BUTTON_TEXT).setOrigin(0.5);
         const btnRightIcon = this.add.nineslice(40, 260, 25, 25, HAPPY_EMOTION_KEY, 0).setOrigin(0.5);    
 

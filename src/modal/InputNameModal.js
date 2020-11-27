@@ -74,7 +74,6 @@ export default class InputNameModal extends Phaser.Scene {
             if(this.container.length <= 5) {
                 const labelText = new TextLabel(this, 0, 45, 'Por favor, digite seu nome!', { fontFamily: 'Comic Sans MS', fontSize: '18px', fill: '#000', align: 'center', padding: 10, wordWrap: { width: 400 } }).setOrigin(0.5);
                 this.container.add(labelText);
-                console.log(this.container.getAll());
             } else {
                 return;
             }
