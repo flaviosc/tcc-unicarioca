@@ -38,7 +38,7 @@ export default class UpdateLocalStorageData {
 
     sortData(data){
         if(data){ 
-            data.sort((item1, item2) => item1.playerPoints < item2.playerPoints ? 1 : -1);
+            return data.sort((item1, item2) => item1.playerPoints < item2.playerPoints ? 1 : -1);
         } 
     }
 }
